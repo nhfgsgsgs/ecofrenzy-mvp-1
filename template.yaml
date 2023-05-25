@@ -22,7 +22,7 @@ Resources:
       MemorySize: 512
       Environment:
         Variables:
-          MONGO_URL: "mongodb+srv://tungjav:tungjav@cluster0.styzwwu.mongodb.net"
+          MONGO_URL: !Ref MongoUrl
       Events:
         ExpressFunctionProxy:
           Type: Api
