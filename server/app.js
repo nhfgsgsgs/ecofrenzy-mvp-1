@@ -18,7 +18,7 @@ appRouter.get("/", (req, res) => {
 });
 
 mongoose
-  .connect(process.env.MONGO_URL)
+  .connect("mongodb+srv://tungjav:tungjav@cluster0.styzwwu.mongodb.net")
   .then(() => {
     console.log("connected to mongo");
   })

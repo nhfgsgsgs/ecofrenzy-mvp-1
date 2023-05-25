@@ -20,9 +20,6 @@ Resources:
       Handler: index.handler
       Runtime: nodejs14.x
       MemorySize: 512
-      Environment:
-        Variables:
-          MONGO_URL: !Ref MongoUrl
       Events:
         ExpressFunctionProxy:
           Type: Api
