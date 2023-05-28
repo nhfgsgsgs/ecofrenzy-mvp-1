@@ -35,24 +35,26 @@ Resources:
       Handler: eventBridge.handler
       Runtime: nodejs14.x
       MemorySize: 512
-      Events:
-        ExpressFunctionProxy:
-          Type: Api
-          Properties:
-            RestApiId: !Ref ExpressApi
-            Path: "/eventBridge"
-            Method: ANY
+      
 
   ExpressEventRule: 
     Type: AWS::Events::Rule
     Properties:
       EventBusName: default
       Description: "Event rules for Express function"
-      ScheduleExpression: cron(20 15 * * ? *)
+      ScheduleExpression: cron(0 14 * * ? *)
       State: ENABLED
       Targets:
         - Arn: !GetAtt ExpressEventBridge.Arn
           Id: ExpressFunctionTarget
+
+  PermissionForEventsToInvokeLambda:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !GetAtt ExpressEventBridge.Arn
+      Action: lambda:InvokeFunction
+      Principal: events.amazonaws.com
+      SourceArn: !GetAtt ExpressEventRule.Arn
       
 Outputs:
 
