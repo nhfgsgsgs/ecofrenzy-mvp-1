@@ -18,7 +18,7 @@ Resources:
     Properties:
       CodeUri: server/
       Handler: lambda.handler
-      Runtime: nodejs18.x
+      Runtime: nodejs14.x
       MemorySize: 512
       Events:
         ExpressFunctionProxy:
@@ -34,37 +34,37 @@ Resources:
             Path: "/api"
             Method: ANY
   
-  ExpressEventBridge: 
-    Type: AWS::Serverless::Function
-    Properties:
-      CodeUri: server/
-      Handler: eventBridge.handler
-      Runtime: nodejs18.x
-      MemorySize: 512
-      Events:
-        ExpressFunctionProxy:
-          Type: Api
-          Properties:
-            RestApiId: !Ref ExpressApi
-            Path: "/"
-            Method: ANY
-        ExpressFunctionRoot:
-          Type: Api
-          Properties:
-            RestApiId: !Ref ExpressApi
-            Path: "/eventBridge"
-            Method: ANY
+  # ExpressEventBridge: 
+  #   Type: AWS::Serverless::Function
+  #   Properties:
+  #     CodeUri: server/
+  #     Handler: eventBridge.handler
+  #     Runtime: nodejs14.x
+  #     MemorySize: 512
+  #     Events:
+  #       ExpressFunctionProxy:
+  #         Type: Api
+  #         Properties:
+  #           RestApiId: !Ref ExpressApi
+  #           Path: "/"
+  #           Method: ANY
+  #       ExpressFunctionRoot:
+  #         Type: Api
+  #         Properties:
+  #           RestApiId: !Ref ExpressApi
+  #           Path: "/eventBridge"
+  #           Method: ANY
 
-  ExpressEventRule: 
-    Type: AWS::Events::Rule
-    Properties:
-      EventBusName: default
-      Description: "Event rules for Express function"
-      ScheduleExpression: cron(10 9 * * ? *)
-      State: ENABLED
-      Targets:
-        - Arn: !GetAtt ExpressEventBridge.Arn
-          Id: ExpressFunctionTarget
+  # ExpressEventRule: 
+  #   Type: AWS::Events::Rule
+  #   Properties:
+  #     EventBusName: default
+  #     Description: "Event rules for Express function"
+  #     ScheduleExpression: cron(10 9 * * ? *)
+  #     State: ENABLED
+  #     Targets:
+  #       - Arn: !GetAtt ExpressEventBridge.Arn
+  #         Id: ExpressFunctionTarget
       
 Outputs:
 
@@ -74,9 +74,9 @@ Outputs:
   ExpressFunction:
     Description: "Express Lambda Function ARN"
     Value: !GetAtt ExpressFunction.Arn
-  ExpressEventBridge:
-    Description: "Express EventBridge Lambda Function ARN"
-    Value: !GetAtt ExpressEventBridge.Arn
-  ExpressEventRule:
-    Description: "Express EventBridge Rule ARN"
-    Value: !Ref ExpressEventRule
+  # ExpressEventBridge:
+  #   Description: "Express EventBridge Lambda Function ARN"
+  #   Value: !GetAtt ExpressEventBridge.Arn
+  # ExpressEventRule:
+  #   Description: "Express EventBridge Rule ARN"
+  #   Value: !Ref ExpressEventRule

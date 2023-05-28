@@ -10,7 +10,7 @@ eventBridge.use(bodyParser.json());
 eventBridge.use(bodyParser.urlencoded({ extended: true }));
 eventBridge.use(express.json());
 
-eventBridge.use("/", eventBridgeRouter);
+eventBridge.use("/eventBridge", eventBridgeRouter);
 
 eventBridgeRouter.get("/", (req, res) => {
   res.json({ message: "Hello World" });
