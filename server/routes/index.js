@@ -1,10 +1,10 @@
 const express = require("express");
 const appRouter = express.Router();
 
-const missionRouter = require("./mission");
-const userRouter = require("./user");
+const lambdaRouter = require("./lambda");
+const eventBridgeRouter = require("./eventBridge");
 
-appRouter.use("/mission", missionRouter);
-appRouter.use("/user", userRouter);
+appRouter.use("/api", lambdaRouter);
+appRouter.use("/eventBridge", eventBridgeRouter);
 
 module.exports = appRouter;

@@ -1,19 +1,20 @@
 const express = require("express");
-const app = express();
+const lambda = express();
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const dotenv = require("dotenv");
 const mongoose = require("mongoose");
+const lambdaRouter = require("../routes/lambda");
 dotenv.config();
-const appRouter = require("./routes/index.js");
 
-app.use(cors());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.json());
+lambda.use(cors());
+lambda.use(bodyParser.json());
+lambda.use(bodyParser.urlencoded({ extended: true }));
+lambda.use(express.json());
 
-app.use("/api", appRouter);
-appRouter.get("/", (req, res) => {
+lambda.use("/", lambdaRouter);
+
+lambdaRouter.get("/", (req, res) => {
   res.json({ message: "Hello World" });
 });
 
@@ -26,4 +27,4 @@ mongoose
     console.log(err);
   });
 
-module.exports = app;
+module.exports = lambda;

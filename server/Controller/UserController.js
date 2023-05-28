@@ -1,42 +1,13 @@
 const User = require("../Models/User");
 const Mission = require("../Models/Mission");
+const Storage = require("../Models/Storage");
 
 const UserController = {
-  createTodayMission: async (req, res) => {
-    try {
-      const { id } = req.body;
-      const missions = await Mission.aggregate([
-        { $sample: { size: 3 } },
-        {
-          $project: {
-            _id: 1,
-            name: 1,
-            category: 1,
-            description: 1,
-            point: 1,
-          },
-        },
-      ]);
-      const user = await User.findOneAndUpdate(
-        { _id: id },
-        { $set: { todayMission: missions } },
-        { new: true }
-      );
-      return res.status(200).json({
-        message: "Mission updated successfully",
-        user: user,
-        missions: missions,
-      });
-    } catch (error) {
-      return res.status(400).json({ message: error.message });
-    }
-  },
-
   updateTodayMission: async (req, res) => {
     try {
-      const { id, missionId } = req.body;
+      const { userId, missionId } = req.body;
       const user = await User.findOneAndUpdate(
-        { _id: id, "todayMission._id": missionId },
+        { _id: userId, "todayMission._id": missionId },
         { $set: { "todayMission.$.isDone": true } },
         { new: true }
       );
@@ -51,8 +22,8 @@ const UserController = {
 
   getTodayMission: async (req, res) => {
     try {
-      const { id } = req.body;
-      const user = await User.findById(id);
+      const { userId } = req.body;
+      const user = await User.findById(userId);
       return res.status(200).json({
         message: "Mission retrieved successfully",
         mission: user.todayMission,
@@ -65,11 +36,32 @@ const UserController = {
   createUser: async (req, res) => {
     try {
       const user = await User.create({
-        todayMission: [],
+        todayMission: await Mission.aggregate([
+          { $sample: { size: 3 } },
+          {
+            $project: {
+              _id: 1,
+              name: 1,
+              category: 1,
+              description: 1,
+              point: 1,
+            },
+          },
+          {
+            $addFields: {
+              isDone: false,
+            },
+          },
+        ]),
       });
-      return res.status(201).json({
+      const storage = await Storage.create({
+        user: user._id,
+        historyMission: [],
+      });
+      return res.status(200).json({
         message: "User created successfully",
         user: user,
+        storage: storage,
       });
     } catch (error) {
       return res.status(400).json({ message: error.message });
