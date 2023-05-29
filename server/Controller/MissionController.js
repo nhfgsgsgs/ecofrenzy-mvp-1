@@ -1,5 +1,4 @@
 const Mission = require("../Models/Mission");
-const User = require("../Models/User");
 
 const MissionController = {
   createMission: async (req, res) => {
