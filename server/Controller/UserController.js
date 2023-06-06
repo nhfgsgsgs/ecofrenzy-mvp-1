@@ -22,8 +22,8 @@ const UserController = {
 
   getTodayMission: async (req, res) => {
     try {
-      const { userId } = req.body;
-      const user = await User.findById(userId);
+      const { id } = req.params;
+      const user = await User.findById(id);
       return res.status(200).json({
         message: "Mission retrieved successfully",
         mission: user.todayMission,

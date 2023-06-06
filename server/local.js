@@ -19,6 +19,13 @@ app.use("/", appRouter);
 
 app.listen(port);
 
+app.get("/", (req, res) => {
+  return res.status(200).json({
+    success: true,
+    data: "Hello World",
+  });
+});
+
 mongoose
   .connect(process.env.MONGO_URL)
   .then(() => {

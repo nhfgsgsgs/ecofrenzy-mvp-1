@@ -19,6 +19,11 @@ const userSchema = new mongoose.Schema(
         point: {
           type: Number,
         },
+        status: {
+          type: String,
+          enum: ["Start", "In Progress", "Done"],
+          default: "Start",
+        },
         isDone: {
           type: Boolean,
           default: false,

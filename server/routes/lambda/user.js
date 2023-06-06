@@ -4,7 +4,7 @@ const userRouter = express.Router();
 
 userRouter.put("/updateToday", UserController.updateTodayMission);
 
-userRouter.get("/getToday", UserController.getTodayMission);
+userRouter.get("/:id/getToday", UserController.getTodayMission);
 userRouter.post("/", UserController.createUser);
 
 module.exports = userRouter;
