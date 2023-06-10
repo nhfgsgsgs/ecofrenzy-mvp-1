@@ -12,20 +12,28 @@ mongoose
     console.log(err);
   });
 
+function shuffle(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}
+
 const createTodayMission = async (event) => {
   try {
     const storages = await Storage.find();
     const users = await User.find();
     const missions = await Mission.find();
+    const shuffledMissions = shuffle(missions);
 
-    const randomMissions = [0, 1, 2].map((value) => {
-      const randomNumber = Math.floor(Math.random() * missions.length);
+    const randomMissions = shuffledMissions.slice(0, 3).map((mission) => {
       return {
-        _id: missions[randomNumber]._id,
-        name: missions[randomNumber].name,
-        category: missions[randomNumber].category,
-        description: missions[randomNumber].description,
-        point: missions[randomNumber].point,
+        _id: mission._id,
+        name: mission.name,
+        category: mission.category,
+        description: mission.description,
+        point: mission.point,
         isDone: false,
       };
     });
