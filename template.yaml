@@ -13,14 +13,17 @@ Resources:
     Properties:
       StageName: prod
       BinaryMediaTypes: ['*/*']
-      
+  
   ExpressFunction:
     Type: AWS::Serverless::Function 
     Properties:
       CodeUri: server/
       Handler: lambda.handler
-      Runtime: nodejs14.x
+      Runtime: nodejs18.x
       MemorySize: 512
+      Policies:
+        - S3CrudPolicy:
+            BucketName: !Ref S3Bucket
       Events:
         ExpressFunctionProxy:
           Type: Api
@@ -34,7 +37,7 @@ Resources:
     Properties:
       CodeUri: server/
       Handler: eventBridge.handler
-      Runtime: nodejs14.x
+      Runtime: nodejs18.x
       MemorySize: 512
       
   ExpressEventRule: 
@@ -47,6 +50,30 @@ Resources:
       Targets:
         - Arn: !GetAtt ExpressEventBridge.Arn
           Id: ExpressFunctionTarget
+
+  S3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: ecofrenzy-img
+      AccessControl: BucketOwnerFullControl
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+
+  S3BucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref S3Bucket
+      PolicyDocument:
+        Statement:
+          - Action:
+              - s3:PutObject
+            Effect: Allow
+            Resource: !Sub arn:aws:s3:::${S3Bucket}/*
+            Principal:
+              AWS: !Sub arn:aws:iam::${AWS::AccountId}:root
 
   PermissionForEventsToInvokeLambda:
     Type: AWS::Lambda::Permission
@@ -70,3 +97,9 @@ Outputs:
   ExpressEventRule:
     Description: "Express EventBridge Rule ARN"
     Value: !Ref ExpressEventRule
+  S3BucketOutput:
+    Description: "S3 Bucket for storing files"
+    Value: !Ref S3Bucket
+  # ExpressFunctionS3Policy:
+  #   Description: "ExpressFunctionS3Policy"
+  #   Value: !Ref ExpressFunctionS3Policy

@@ -7,6 +7,7 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 const appRouter = require("./routes/index");
 const moment = require("moment-timezone");
+const multer = require("multer");
 dotenv.config();
 
 app.use(cors());
@@ -18,6 +19,27 @@ const localTimezone = moment.tz.guess();
 app.use("/", appRouter);
 
 app.listen(port);
+app.use((error, req, res, next) => {
+  if (error instanceof multer.MulterError) {
+    if (error.code === "LIMIT_FILE_SIZE") {
+      return res.status(400).json({
+        message: "file is too large",
+      });
+    }
+
+    if (error.code === "LIMIT_FILE_COUNT") {
+      return res.status(400).json({
+        message: "File limit reached",
+      });
+    }
+
+    if (error.code === "LIMIT_UNEXPECTED_FILE") {
+      return res.status(400).json({
+        message: "File must be an image",
+      });
+    }
+  }
+});
 
 app.get("/", (req, res) => {
   return res.status(200).json({

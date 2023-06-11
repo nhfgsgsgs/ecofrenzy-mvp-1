@@ -16,9 +16,9 @@ const UserController = {
           let mission = missions[0];
           switch (mission.status) {
             case "Start":
-              mission.status = "In Progress";
+              mission.status = "Picked";
               break;
-            case "In Progress":
+            case "Picked":
               mission.status = "Done";
               mission.isDone = true;
               break;
@@ -35,9 +35,9 @@ const UserController = {
           })[0];
           switch (mission.status) {
             case "Start":
-              mission.status = "In Progress";
+              mission.status = "Picked";
               break;
-            case "In Progress":
+            case "Picked":
               mission.status = "Done";
               mission.isDone = true;
               break;

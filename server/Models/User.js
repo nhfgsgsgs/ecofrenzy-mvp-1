@@ -21,7 +21,7 @@ const userSchema = new mongoose.Schema(
         },
         status: {
           type: String,
-          enum: ["Start", "In Progress", "Done"],
+          enum: ["Start", "Picked", "Done"],
           default: "Start",
         },
         isDone: {
