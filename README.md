@@ -1,6 +1,6 @@
 # API
 
-Base url: https://2rrog7bt6f.execute-api.ap-southeast-1.amazonaws.com/Stage
+Base url: https://9o3z9up7h8.execute-api.ap-southeast-1.amazonaws.com/prod/
 
 1. Get today mission list
 
@@ -19,6 +19,7 @@ Base url: https://2rrog7bt6f.execute-api.ap-southeast-1.amazonaws.com/Stage
    - Body: { "missionId": "....", "userId": "647f4871cba2f4670727a9a6" }
 
 4. Upload image
+
    - URL: /api/user/upload
    - Method: POST
    - Body: {
@@ -26,5 +27,5 @@ Base url: https://2rrog7bt6f.execute-api.ap-southeast-1.amazonaws.com/Stage
      }
 
 5. Create user
-    - URL: /api/user
-    - Method: POST
+   - URL: /api/user
+   - Method: POST
