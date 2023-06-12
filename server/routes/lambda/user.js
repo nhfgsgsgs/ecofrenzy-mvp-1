@@ -1,13 +1,14 @@
 const express = require("express");
 const UserController = require("../../Controller/UserController");
 const ImageController = require("../../Controller/ImageController");
+const { upload } = require("../../s3Service");
 const userRouter = express.Router();
 
 userRouter.put("/updateToday", UserController.updateTodayMission);
 
-userRouter.get("/:id/   ", UserController.getTodayMission);
+userRouter.get("/:id/getToday", UserController.getTodayMission);
 userRouter.post("/", UserController.createUser);
-userRouter.post("/upload", ImageController.upload);
+userRouter.post("/upload", upload.single("file"), ImageController.upload);
 
 // fdf
 
