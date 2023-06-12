@@ -1,0 +1,46 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+
+Resources:
+  ExpressFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://ecofrenzy-sourcecode/server.zip
+      Handler: index.handler
+      Runtime: nodejs14.x
+      MemorySize: 512
+      Role: !GetAtt ExpressFunctionRole.Arn
+      Events:
+        ExpressFunctionProxy:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ExpressApi
+            Path: "/{proxy+}"
+            Method: ANY
+
+  ExpressEventBridge:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://ecofrenzy-sourcecode/server.zip
+      Handler: eventBridge.handler
+      Runtime: nodejs14.x
+      MemorySize: 512
+
+  ExpressEventRule:
+    Type: AWS::Events::Rule
+    Properties:
+      EventBusName: default
+      Description: "Event rules for Express function"
+      ScheduleExpression: cron(0 14 * * ? *)
+      State: ENABLED
+      Targets:
+        - Arn: !GetAtt ExpressEventBridge.Arn
+          Id: ExpressFunctionTarget
+
+  PermissionForEventsToInvokeLambda:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !GetAtt ExpressEventBridge.Arn
+      Action: lambda:InvokeFunction
+      Principal: events.amazonaws.com
+      SourceArn: !GetAtt ExpressEventRule.Arn

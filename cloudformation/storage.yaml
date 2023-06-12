@@ -1,0 +1,18 @@
+AWSTemplateFormatVersion: "2010-09-09"
+
+Resources:
+  UploadImageBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: ecofrenzy-upload-img
+      AccessControl: BucketOwnerFullControl
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+
+Outputs:
+  UploadImageBucket:
+    Description: "S3 Bucket for storing files"
+    Value: !Ref UploadImageBucket
