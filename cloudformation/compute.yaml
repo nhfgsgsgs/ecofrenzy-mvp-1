@@ -2,10 +2,36 @@ AWSTemplateFormatVersion: "2010-09-09"
 Transform: AWS::Serverless-2016-10-31
 
 Resources:
+  ExpressFunctionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: ExpressFunctionServiceRole
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        - PolicyName: ExpressFunctionS3Policy
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - s3:GetObject
+                  - s3:PutObject
+                Resource: !Sub arn:aws:s3:::${UploadImageBucket}/*
+
   ExpressFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://ecofrenzy-sourcecode/server.zip
+      CodeUri:
+        Bucket: ecofrenzy-sourcecode
+        Key: server.zip
       Handler: index.handler
       Runtime: nodejs14.x
       MemorySize: 512
@@ -21,7 +47,9 @@ Resources:
   ExpressEventBridge:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://ecofrenzy-sourcecode/server.zip
+      CodeUri:
+        Bucket: ecofrenzy-sourcecode
+        Key: server.zip
       Handler: eventBridge.handler
       Runtime: nodejs14.x
       MemorySize: 512
