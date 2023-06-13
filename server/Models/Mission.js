@@ -8,16 +8,36 @@ const missionSchema = new mongoose.Schema(
     },
     point: {
       type: Number,
-      required: true,
+      default: 50,
     },
     category: {
       type: String,
-      // enum: [""],
+    },
+    impact: {
+      type: String,
     },
     description: {
       type: String,
       default: "",
     },
+    level: {
+      type: String,
+      enum: ["Easy", "Intermediate", "Hard"],
+    },
+    creativity: {
+      type: String,
+      enum: ["Direct", "Indirect"],
+    },
+    verification: [
+      {
+        question: {
+          type: String,
+        },
+        desiredAnswer: {
+          type: String,
+        },
+      },
+    ],
   },
   { timestamps: true }
 );

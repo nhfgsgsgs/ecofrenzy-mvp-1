@@ -9,16 +9,40 @@ const userSchema = new mongoose.Schema(
         },
         name: {
           type: String,
+          required: true,
+        },
+        point: {
+          type: Number,
+          default: 50,
         },
         category: {
           type: String,
         },
-        description: {
+        impact: {
           type: String,
         },
-        point: {
-          type: Number,
+        description: {
+          type: String,
+          default: "",
         },
+        level: {
+          type: String,
+          enum: ["Easy", "Intermediate", "Hard"],
+        },
+        creativity: {
+          type: String,
+          enum: ["Direct", "Indirect"],
+        },
+        verification: [
+          {
+            question: {
+              type: String,
+            },
+            desiredAnswer: {
+              type: String,
+            },
+          },
+        ],
         status: {
           type: String,
           enum: ["Start", "Picked", "Done"],
@@ -30,6 +54,10 @@ const userSchema = new mongoose.Schema(
         },
       },
     ],
+    preferences: {
+      // category: {
+      // }
+    },
   },
   { timestamps: true }
 );
