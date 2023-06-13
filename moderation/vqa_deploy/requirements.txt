@@ -1,2 +1,4 @@
 boto3>=1.26.111
+botocore>=1.29.111
+crhelper>=2.0.11
 sagemaker>=2.164.0
