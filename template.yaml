@@ -16,6 +16,13 @@ Resources:
       Parameters:
         UploadImageBucket: !GetAtt Storage.Outputs.UploadImageBucket
 
+  Moderation:
+    Type: AWS::Serverless::Application
+    Properties:
+      Location: moderation/template.yaml
+      Parameters:
+        UploadImageBucket: !GetAtt Storage.Outputs.UploadImageBucket
+
 Outputs:
   ExpressApiEndpoint:
     Description: "API Gateway endpoint URL for Prod stage for Express function"

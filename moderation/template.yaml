@@ -1,0 +1,27 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  Image moderation stack for EcoFrenzy
+
+Parameters:
+  UploadImageBucket:
+    Type: String
+    Description: "S3 Bucket for storing uploaded images of EcoFrenzy"
+
+Resources:
+  HFVQADeployFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: vqa_deploy_function.handler
+      Runtime: python3.9
+      CodeUri: vqa_deploy/
+      Timeout: 900 # Set the timeout to 15 minutes
+      Policies:
+        - AmazonS3FullAccess
+        - AWSLambdaBasicExecutionRole
+        - AmazonSageMakerFullAccess
+
+  HFVQACustomResource:
+    Type: Custom::HFVQADeploy
+    Properties:
+      ServiceToken: !GetAtt HFVQADeployFunction.Arn
