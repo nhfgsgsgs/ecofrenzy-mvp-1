@@ -1,17 +1,21 @@
+from __future__ import print_function
+from crhelper import CfnResource
 import os
-import json
 import boto3
-import sagemaker
+from botocore.exceptions import ClientError
 from sagemaker.huggingface import HuggingFaceModel
+import logging
+
+logger = logging.getLogger(__name__)
+helper = CfnResource(json_logging=False, log_level="DEBUG", boto_level="CRITICAL")
 
 
-def handler(event, context):
-    try:
-        role = sagemaker.get_execution_role()
-    except ValueError:
-        role_name = os.getenv("EXECUTION_ROLE_NAME")
-        iam = boto3.client("iam")
-        role = iam.get_role(RoleName=role_name)["Role"]["Arn"]
+@helper.create
+def create(event, context):
+    logger.info("Got Create")
+    role_name = os.getenv("EXECUTION_ROLE_NAME")
+    iam = boto3.client("iam")
+    role = iam.get_role(RoleName=role_name)["Role"]["Arn"]
 
     # Hub Model configuration. https://huggingface.co/models
     hub = {
@@ -46,12 +50,45 @@ def handler(event, context):
         Overwrite=True,
     )
 
-    return {
-        "statusCode": 200,
-        "body": json.dumps(
-            {
-                "message": "Hugging Face Model Deployed!",
-                "endpoint_name": endpoint_name,
-            }
-        ),
-    }
+    helper.Data.update({"endpoint_name": endpoint_name})
+
+    return endpoint_name
+
+
+@helper.update
+def update(event, context):
+    logger.info("Got Update: %s - no action.", event)
+
+
+@helper.delete
+def delete(event, context):
+    logger.info("Got Delete: %s - Delete all associated endpoints.", event)
+
+    sagemaker_client = boto3.client("sagemaker")
+    endpoint_name = helper.Data.get("endpoint_name")
+
+    # Delete the endpoint
+    try:
+        sagemaker_client.delete_endpoint(EndpointName=endpoint_name)
+    except ClientError as e:
+        if e.response["Error"]["Code"] != "ValidationException":
+            # Raise the exception if it's not a ValidationException (which means the endpoint already doesn't exist)
+            raise
+
+    # Delete the endpoint configuration
+    try:
+        sagemaker_client.delete_endpoint_config(EndpointConfigName=endpoint_name)
+    except ClientError as e:
+        if e.response["Error"]["Code"] != "ValidationException":
+            raise
+
+    # Delete the model
+    try:
+        sagemaker_client.delete_model(ModelName=endpoint_name)
+    except ClientError as e:
+        if e.response["Error"]["Code"] != "ValidationException":
+            raise
+
+
+def handler(event, context):
+    helper(event, context)

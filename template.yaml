@@ -20,8 +20,6 @@ Resources:
     Type: AWS::Serverless::Application
     Properties:
       Location: moderation/template.yaml
-      Parameters:
-        UploadImageBucket: !GetAtt Storage.Outputs.UploadImageBucket
 
 Outputs:
   ExpressApiEndpoint:
