@@ -34,6 +34,9 @@ const createTodayMission = async (event) => {
         category: mission.category,
         description: mission.description,
         point: mission.point,
+        level: mission.level,
+        creativity: mission.creativity,
+        verification: mission.verification,
         isDone: false,
       };
     });

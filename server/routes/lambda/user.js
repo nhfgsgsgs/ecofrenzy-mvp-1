@@ -8,7 +8,7 @@ userRouter.put("/updateToday", UserController.updateTodayMission);
 
 userRouter.get("/:id/getToday", UserController.getTodayMission);
 userRouter.post("/", UserController.createUser);
-userRouter.post("/upload", upload.single("file"), ImageController.upload);
+userRouter.post("/:id/upload", upload.single("file"), ImageController.upload);
 
 // fdf
 

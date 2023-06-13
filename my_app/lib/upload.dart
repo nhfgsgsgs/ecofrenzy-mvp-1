@@ -34,46 +34,30 @@ class _UploadState extends State<Upload> {
 
     var stream = http.ByteStream(Stream.castFrom(file.openRead()));
     var length = await file.length();
-    // var uri = Uri.parse(
-    //     "https://ea9pgpvvaa.execute-api.ap-southeast-1.amazonaws.com/prod/api/user/upload");
+    var uri = Uri.parse(
+        "http://192.168.54.105:3000/api/user/647f4871cba2f4670727a9a6/upload");
 
-    // var name = "customName4." + file.path.split(".").last;
-    // print(name);
+    var name = "customName4." + file.path.split(".").last;
+    print(name);
 
-    // Map<String, String> headers = {
-    //   "Accept": "*/*",
-    // };
+    Map<String, String> headers = {
+      "Accept": "multipart/form-data",
+    };
 
-    // var multipartFile = http.MultipartFile(
-    //   'file',
-    //   stream,
-    //   length,
-    // );
+    var multipartFile = http.MultipartFile(
+      'file',
+      stream,
+      length,
+    );
 
-    // var request = http.MultipartRequest('POST', uri)
-    //   ..headers.addAll(headers)
-    //   ..files.add(multipartFile);
+    var request = http.MultipartRequest('POST', uri)
+      ..headers.addAll(headers)
+      ..files.add(multipartFile);
 
-    // var res = await request.send();
-    var postUri = Uri.parse(
-        "https://ea9pgpvvaa.execute-api.ap-southeast-1.amazonaws.com/prod/api/user/upload");
+    var res = await request.send();
 
-    http.MultipartRequest request = http.MultipartRequest("POST", postUri)
-      ..headers.addAll({"Accept": "*/*"});
-
-    // ..files.add(await http.MultipartFile.fromPath('file', file.path));
-
-    request.files.add(await http.MultipartFile.fromPath('file', file.path));
-
-    // http.MultipartFile multipartFile =
-    //     await http.MultipartFile.fromPath('file', file.path);
-
-    // request.files.add(multipartFile);
-
-    http.StreamedResponse response = await request.send();
-
-    print(response.statusCode);
-    print(response.reasonPhrase);
+    print(res.statusCode);
+    print(res.reasonPhrase);
     print(file.length());
 
     // Check if the copy of the file exists
