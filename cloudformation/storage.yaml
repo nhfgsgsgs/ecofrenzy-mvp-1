@@ -1,4 +1,7 @@
 AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  S3 Bucket for storing files for EcoFrenzy
 
 Resources:
   UploadImageBucket:
@@ -7,10 +10,10 @@ Resources:
       BucketName: ecofrenzy-upload-img
       AccessControl: BucketOwnerFullControl
       PublicAccessBlockConfiguration:
-        BlockPublicAcls: true
-        BlockPublicPolicy: true
-        IgnorePublicAcls: true
-        RestrictPublicBuckets: true
+        BlockPublicAcls: false
+        BlockPublicPolicy: false
+        IgnorePublicAcls: false
+        RestrictPublicBuckets: false
 
 Outputs:
   UploadImageBucket:

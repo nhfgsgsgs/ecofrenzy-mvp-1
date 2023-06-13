@@ -1,0 +1,22 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  Root stack for EcoFrenzy backend
+
+Resources:
+  Storage:
+    Type: AWS::Serverless::Application
+    Properties:
+      Location: cloudformation/storage.yaml
+
+  Api:
+    Type: AWS::Serverless::Application
+    Properties:
+      Location: server/template.yaml
+      Parameters:
+        UploadImageBucket: !GetAtt Storage.Outputs.UploadImageBucket
+
+Outputs:
+  ExpressApiEndpoint:
+    Description: "API Gateway endpoint URL for Prod stage for Express function"
+    Value: !GetAtt Api.Outputs.ExpressApiEndpoint
