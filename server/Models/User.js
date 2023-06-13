@@ -30,6 +30,11 @@ const userSchema = new mongoose.Schema(
         },
       },
     ],
+    preferences: {
+      // category: {
+
+      // }
+    }
   },
   { timestamps: true }
 );

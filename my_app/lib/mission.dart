@@ -33,8 +33,8 @@ Future<String> getIPAddress() async {
 Future<List<Map<String, dynamic>>> fetchMissions() async {
   final id = jsonDecode(await loadJsonData())['id'];
   final IP = await getIPAddress();
-  final response =
-      await http.get(Uri.parse('http://$IP:3000/api/user/$id/getToday'));
+  final response = await http.get(Uri.parse(
+      'https://ea9pgpvvaa.execute-api.ap-southeast-1.amazonaws.com/prod/api/user/$id/getToday'));
   final Map<String, dynamic> body = jsonDecode(response.body);
   final List<dynamic> missions = body['mission'] as List<dynamic>;
   return missions
@@ -52,7 +52,8 @@ Future<String> updateMission(String id) async {
   final userId = jsonDecode(await loadJsonData())['id'];
   final IP = await getIPAddress();
   final response = await http.put(
-    Uri.parse('http://$IP:3000/api/user/updateToday'),
+    Uri.parse(
+        'https://ea9pgpvvaa.execute-api.ap-southeast-1.amazonaws.com/prod/api/user/updateToday'),
     headers: <String, String>{
       'Accept': 'application/json',
     },
