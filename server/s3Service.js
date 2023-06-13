@@ -6,11 +6,10 @@ const path = require("path");
 
 exports.s3Uploadv3 = async (file) => {
   const s3client = new S3Client();
-  // const fileExtension = path.extname(file?.originalname);
 
   const param = {
     Bucket: "ecofrenzy-upload-img",
-    Key: `ecofrenzy/${uuid()}`,
+    Key: `ecofrenzy/${uuid()}-${file?.originalname}`,
     Body: file?.buffer,
     ACL: "bucket-owner-full-control",
     ContentType: file?.mimetype,
@@ -21,6 +20,7 @@ exports.s3Uploadv3 = async (file) => {
   return {
     Key: param.Key,
     Location: `https://${param.Bucket}.s3.amazonaws.com/${param.Key}`,
+    param,
     response,
   };
 };

@@ -32,14 +32,18 @@ const createTodayMission = async (event) => {
         _id: mission._id,
         name: mission.name,
         category: mission.category,
+
         description: mission.description,
         point: mission.point,
         level: mission.level,
+
         creativity: mission.creativity,
         verification: mission.verification,
-        isDone: false,
+
+        impact: mission.impact,
       };
     });
+    console.log(randomMissions);
     const bulkOpsMission = users.map((user) => ({
       updateOne: {
         filter: { _id: user._id },

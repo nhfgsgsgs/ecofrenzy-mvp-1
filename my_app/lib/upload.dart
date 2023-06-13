@@ -4,6 +4,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:http_parser/http_parser.dart';
 
 class Upload extends StatefulWidget {
   const Upload({Key? key}) : super(key: key);
@@ -27,41 +28,24 @@ class _UploadState extends State<Upload> {
     File file = File(pickedFile.path);
     print(file.path);
 
-    // Create a copy of the file with a unique name in the temporary directory
-    final tempDir = await getTemporaryDirectory();
-    final tempFile = await file.copy(
-        '${tempDir.path}/temp_${DateTime.now().millisecondsSinceEpoch}.png');
-
-    var stream = http.ByteStream(Stream.castFrom(file.openRead()));
-    var length = await file.length();
     var uri = Uri.parse(
-        "https://ea9pgpvvaa.execute-api.ap-southeast-1.amazonaws.com/prod/api/user/647f4871cba2f4670727a9a6/upload");
+        "http://192.168.54.105:3000/api/user/647f4871cba2f4670727a9a6/upload");
+    var request = http.MultipartRequest('POST', uri);
 
-    var name = "customName4." + file.path.split(".").last;
-    print(name);
+    request.files.add(await http.MultipartFile.fromPath('file', file.path,
+        filename: file.path.split('/').last,
+        contentType: MediaType('image', 'png')));
 
-    Map<String, String> headers = {
-      "Accept": "multipart/form-data",
-    };
+    var response = await request.send();
 
-    var multipartFile = http.MultipartFile(
-      'file',
-      stream,
-      length,
-    );
+    print(response.statusCode);
+    print(response.reasonPhrase);
 
-    var request = http.MultipartRequest('POST', uri)
-      ..headers.addAll(headers)
-      ..files.add(multipartFile);
+    response.stream.transform(utf8.decoder).listen((value) {
+      print(value);
+    });
 
-    var res = await request.send();
-
-    print(res.statusCode);
-    print(res.reasonPhrase);
-    print(file.length());
-
-    // Check if the copy of the file exists
-    print('Temp file exists: ${await tempFile.exists()}');
+    // print(response.reasonPhrase);
   }
 
   @override
