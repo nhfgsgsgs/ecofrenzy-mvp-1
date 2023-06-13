@@ -15,7 +15,16 @@ Resources:
         IgnorePublicAcls: false
         RestrictPublicBuckets: false
 
+  ImageChallengeNotificationTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: ImageChallengeNotificationTopic
+
 Outputs:
   UploadImageBucket:
     Description: "S3 Bucket for storing files"
     Value: !Ref UploadImageBucket
+
+  ImageChallengeNotificationTopic:
+    Description: "SNS Topic for uploaded image & corresponding challenge notifications"
+    Value: !Ref ImageChallengeNotificationTopic

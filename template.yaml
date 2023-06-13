@@ -15,11 +15,14 @@ Resources:
       Location: server/template.yaml
       Parameters:
         UploadImageBucket: !GetAtt Storage.Outputs.UploadImageBucket
+        ImageChallengeNotificationTopic: !GetAtt Storage.Outputs.ImageChallengeNotificationTopic
 
   Moderation:
     Type: AWS::Serverless::Application
     Properties:
       Location: moderation/template.yaml
+      Parameters:
+        ImageChallengeNotificationTopic: !GetAtt Storage.Outputs.ImageChallengeNotificationTopic
 
 Outputs:
   ExpressApiEndpoint:

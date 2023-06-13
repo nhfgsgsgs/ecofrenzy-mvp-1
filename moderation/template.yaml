@@ -3,6 +3,11 @@ Transform: AWS::Serverless-2016-10-31
 Description: >
   Image moderation stack for EcoFrenzy
 
+Parameters:
+  ImageChallengeNotificationTopic:
+    Type: String
+    Description: "SNS Topic for uploaded image & corresponding challenge notifications"
+
 Resources:
   SageMakerExecutionRole:
     Type: AWS::IAM::Role
@@ -77,3 +82,83 @@ Resources:
     Type: Custom::HFVQADeploy
     Properties:
       ServiceToken: !GetAtt HFVQADeployFunction.Arn
+
+  ImageModerationRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: ImageModerationRole
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Policies:
+        - PolicyName: RekognitionAccess
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - "rekognition:DetectModerationLabels"
+                Resource: "*"
+        - PolicyName: SageMakerAccess
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - "sagemaker:InvokeEndpoint"
+                Resource: "*"
+        - PolicyName: S3Access
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - "s3:GetObject"
+                  - "s3:PutObject"
+                Resource: "*"
+        - PolicyName: SSMParameterAccess
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - "ssm:GetParameter"
+                Resource: "*"
+        - PolicyName: SNSAccess
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - "sns:Subscribe"
+                Resource: !Ref ImageChallengeNotificationTopic
+        - PolicyName: LambdaExecution
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - "logs:CreateLogGroup"
+                  - "logs:CreateLogStream"
+                  - "logs:PutLogEvents"
+                Resource: "arn:aws:logs:*:*:*"
+
+  ImageModerationFunction:
+    Type: AWS::Serverless::Function
+    DependsOn: HFVQACustomResource
+    Properties:
+      CodeUri: src/
+      Handler: lambda_handler.lambda_handler
+      Runtime: python3.9
+      Role: !GetAtt ImageModerationRole.Arn
+      Events:
+        ImageUploadEvent:
+          Type: SNS
+          Properties:
+            Topic: !Ref ImageChallengeNotificationTopic

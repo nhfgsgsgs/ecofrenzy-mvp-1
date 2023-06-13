@@ -8,6 +8,10 @@ Parameters:
     Type: String
     Description: "S3 Bucket for storing files"
 
+  ImageChallengeNotificationTopic:
+    Type: String
+    Description: "SNS Topic for uploaded image & corresponding challenge notifications"
+
 Resources:
   ExpressApi:
     Type: AWS::Serverless::Api
@@ -38,6 +42,15 @@ Resources:
                   - s3:GetObject
                   - s3:PutObject
                 Resource: !Sub arn:aws:s3:::${UploadImageBucket}/*
+
+        - PolicyName: ExpressFunctionSNSPolicy
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - sns:Publish
+                Resource: !Ref ImageChallengeNotificationTopic
 
   ExpressFunction:
     Type: AWS::Serverless::Function
