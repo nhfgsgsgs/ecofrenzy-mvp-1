@@ -8,14 +8,27 @@ module.exports.upload = async (req, res, next) => {
     const id = req.params.id;
     const result = await s3Uploadv3(file);
     const user = await User.findById(id);
-    const mission = user.todayMission.filter((mission) => {
-      return mission.status === "Picked";
+    const updateUser = await User.updateOne(
+      { _id: id, "todayMission.status": "Picked" },
+      {
+        $set: {
+          "todayMission.$.url": result?.Location,
+          "todayMission.$.status": "Pending",
+        },
+      },
+      { new: true }
+    );
+    console.log(updateUser);
+    console.log(result);
+    const mission = user?.todayMission?.filter((mission) => {
+      return mission.status == "Pending";
     })[0];
+
     return res.status(200).json({
       success: true,
       message: "Image uploaded successfully",
       image: result,
-      mission,
+      mission: mission,
     });
   } catch (err) {
     console.log(err.message);
