@@ -65,7 +65,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: vqa_deploy_function.handler
-      Runtime: python3.10
+      Runtime: python3.9
       CodeUri: vqa_deploy/
       Timeout: 900 # Set the timeout to 15 minutes
       Role: !GetAtt SageMakerExecutionRole.Arn
