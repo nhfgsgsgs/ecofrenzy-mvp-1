@@ -34,6 +34,7 @@ Resources:
                   - "s3:PutObject"
                 Resource:
                   - !Sub "arn:aws:s3:::${UploadImageBucket}/*"
+                  - !Sub "arn:aws:s3:::sagemaker-${AWS::Region}-${AWS::AccountId}/*"
         - PolicyName: LambdaExecution
           PolicyDocument:
             Version: "2012-10-17"
