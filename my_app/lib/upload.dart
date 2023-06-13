@@ -29,7 +29,7 @@ class _UploadState extends State<Upload> {
     print(file.path);
 
     var uri = Uri.parse(
-        "http://192.168.54.105:3000/api/user/647f4871cba2f4670727a9a6/upload");
+        "https://ea9pgpvvaa.execute-api.ap-southeast-1.amazonaws.com/prod/api/user/647f4871cba2f4670727a9a6/upload");
     var request = http.MultipartRequest('POST', uri);
 
     request.files.add(await http.MultipartFile.fromPath('file', file.path,
