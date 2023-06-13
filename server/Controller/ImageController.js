@@ -24,11 +24,16 @@ module.exports.upload = async (req, res, next) => {
     console.log(updateUser);
     console.log(result);
     const mission = user?.todayMission?.filter((mission) => {
-      return mission.status == "Pending";
+      return mission.status == "Picked";
     })[0];
+    console.log(mission);
     // call SNS aws
     var params = {
-      Message: `${result.Location}` /* required */,
+      Message: JSON.stringify({
+        userId: user._id,
+        url: result?.Location,
+        mission: mission,
+      }),
       TopicArn:
         "arn:aws:sns:ap-southeast-1:885537931206:ImageChallengeNotificationTopic",
     };
