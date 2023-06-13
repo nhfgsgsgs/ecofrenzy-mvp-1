@@ -1,3 +1,4 @@
+import os
 import json
 import boto3
 import sagemaker
@@ -8,8 +9,9 @@ def handler(event, context):
     try:
         role = sagemaker.get_execution_role()
     except ValueError:
+        role_name = os.getenv("EXECUTION_ROLE_NAME")
         iam = boto3.client("iam")
-        role = iam.get_role(RoleName="sagemaker_execution_role")["Role"]["Arn"]
+        role = iam.get_role(RoleName=role_name)["Role"]["Arn"]
 
     # Hub Model configuration. https://huggingface.co/models
     hub = {
