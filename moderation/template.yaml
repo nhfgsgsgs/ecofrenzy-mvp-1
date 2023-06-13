@@ -1,0 +1,86 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  Image moderation stack for EcoFrenzy
+
+Parameters:
+  UploadImageBucket:
+    Type: String
+    Description: "S3 Bucket for storing uploaded images of EcoFrenzy"
+
+Resources:
+  SageMakerExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: SageMakerExecutionRole
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+                - sagemaker.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Policies:
+        - PolicyName: S3BucketAccess
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - "s3:GetObject"
+                  - "s3:PutObject"
+                Resource:
+                  - !Sub "arn:aws:s3:::${UploadImageBucket}/*"
+                  - !Sub "arn:aws:s3:::sagemaker-${AWS::Region}-${AWS::AccountId}/*"
+        - PolicyName: LambdaExecution
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - "logs:CreateLogGroup"
+                  - "logs:CreateLogStream"
+                  - "logs:PutLogEvents"
+                Resource: "arn:aws:logs:*:*:*"
+        - PolicyName: SageMakerAccess
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - "sagemaker:CreateModel"
+                  - "sagemaker:DeleteModel"
+                  - "sagemaker:DescribeModel"
+                  - "sagemaker:CreateEndpoint"
+                  - "sagemaker:DeleteEndpoint"
+                  - "sagemaker:UpdateEndpoint"
+                Resource: "*"
+        - PolicyName: SSMParameterAccess
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - "ssm:PutParameter"
+                Resource:
+                  - !Sub "arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/*"
+
+  HFVQADeployFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: vqa_deploy_function.handler
+      Runtime: python3.9
+      CodeUri: vqa_deploy/
+      Timeout: 900 # Set the timeout to 15 minutes
+      Role: !GetAtt SageMakerExecutionRole.Arn
+      Environment:
+        Variables:
+          EXECUTION_ROLE_NAME: SageMakerExecutionRole
+
+  HFVQACustomResource:
+    Type: Custom::HFVQADeploy
+    Properties:
+      ServiceToken: !GetAtt HFVQADeployFunction.Arn

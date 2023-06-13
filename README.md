@@ -1,6 +1,6 @@
 # API
 
-Base url: https://9o3z9up7h8.execute-api.ap-southeast-1.amazonaws.com/prod/
+Base url: https://ea9pgpvvaa.execute-api.ap-southeast-1.amazonaws.com/prod/
 
 1. Get today mission list
 
