@@ -12,6 +12,10 @@ Parameters:
     Type: String
     Description: "SNS Topic for uploaded image & corresponding challenge notifications"
 
+  SNSCompleteChallengeTopic:
+    Type: String
+    Description: "SNS Topic for complete challenge notifications"
+
 Resources:
   SageMakerExecutionRole:
     Type: AWS::IAM::Role
@@ -134,7 +138,7 @@ Resources:
                 Action:
                   - "ssm:GetParameter"
                 Resource: "*"
-        - PolicyName: SNSAccess
+        - PolicyName: SNSSubscribeAccess
           PolicyDocument:
             Version: "2012-10-17"
             Statement:
@@ -142,6 +146,14 @@ Resources:
                 Action:
                   - "sns:Subscribe"
                 Resource: !Ref ImageChallengeNotificationTopic
+        - PolicyName: SNSPublishAccess
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - "sns:Publish"
+                Resource: !Ref SNSCompleteChallengeTopic
         - PolicyName: LambdaExecution
           PolicyDocument:
             Version: "2012-10-17"
@@ -169,3 +181,6 @@ Resources:
       Environment:
         Variables:
           EXPRESS_API_ENDPOINT: !Ref ExpressApiEndpoint
+          SNS_COMPLETE_CHALLENGE_TOPIC: !Ref SNSCompleteChallengeTopic
+
+  

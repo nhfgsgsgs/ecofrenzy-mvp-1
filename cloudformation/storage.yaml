@@ -20,6 +20,11 @@ Resources:
     Properties:
       TopicName: ImageChallengeNotificationTopic
 
+  SNSCompleteChallengeTopic: 
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: SNSCompleteChallengeTopic
+
 Outputs:
   UploadImageBucket:
     Description: "S3 Bucket for storing files"
@@ -28,3 +33,7 @@ Outputs:
   ImageChallengeNotificationTopic:
     Description: "Arn of SNS Topic for uploaded image & corresponding challenge notifications"
     Value: !Ref ImageChallengeNotificationTopic
+
+  SNSCompleteChallengeTopic:
+    Description: "Arn of SNS Topic for complete challenge notifications"
+    Value: !Ref SNSCompleteChallengeTopic

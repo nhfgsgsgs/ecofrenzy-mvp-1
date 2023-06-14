@@ -2,12 +2,19 @@ import os
 import boto3
 import json
 import requests
+from firebase_admin import messaging, initialize_app, credentials
+import firebase_admin
 
 rekognition_client = boto3.client("rekognition")
 sagemaker_runtime_client = boto3.client("sagemaker-runtime")
 ssm_client = boto3.client("ssm")
+sns_client = boto3.client(
+    "sns",
+    region_name="ap-southeast-1",
+)
 
 api_endpoint = os.environ["EXPRESS_API_ENDPOINT"]
+sns_topic_arn = os.environ["SNS_COMPLETE_CHALLENGE_TOPIC"]
 
 # Retrieve the endpoint name from Parameter Store
 try:
@@ -16,6 +23,33 @@ try:
 except Exception as e:
     print(e)
     raise e
+
+
+cred = credentials.Certificate(
+    "ecofrenzy-ae321-firebase-adminsdk-43wxc-969954c961.json"
+)
+initialize_app(cred)
+
+
+def send_fcm_notification(topic_arn, message, fcm_token):
+    # Gửi thông báo SNS
+    response = sns_client.publish(TopicArn=topic_arn, Message=message)
+
+    # Kiểm tra kết quả gửi thông báo SNS
+    if response["ResponseMetadata"]["HTTPStatusCode"] == 200:
+        print("Successfully sent SNS notification")
+    else:
+        print("Failed to send SNS notification")
+
+    # Gửi thông báo FCM
+    notification = messaging.Notification(title="Notification Title", body=message)
+    message = messaging.Message(notification=notification, token=fcm_token)
+
+    try:
+        response = messaging.send(message)
+        print("Successfully sent FCM notification:", response)
+    except Exception as e:
+        print("Failed to send FCM notification:", e)
 
 
 def lambda_handler(event, context):
@@ -115,7 +149,7 @@ def lambda_handler(event, context):
             "Content-Type": "application/json",
         }
 
-        response = requests.post(url, headers=headers, json=payload)
+        response = requests.put(url, headers=headers, json=payload)
 
         if response.status_code == 200:
             print("Successfully updated mission status via API")
@@ -124,6 +158,11 @@ def lambda_handler(event, context):
                 "Failed to update mission status via API. Response code:",
                 response.status_code,
             )
+        send_fcm_notification(
+            sns_topic_arn,
+            "Image is verified",
+            "BMN2n6FTAG1FJDpS_zh4R7jufjcxR6FsaugOpP0vaMpw7sYA02ryFJEeLyOLkr7ozpFO1g62y5wZrVXKTDS3hTc",
+        )
 
     else:
         # Notify user that image isnot verified relation to the challenge.And user should reupload the image

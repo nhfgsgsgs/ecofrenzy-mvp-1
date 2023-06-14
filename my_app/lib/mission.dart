@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:flutter/services.dart' show rootBundle;
 import 'dart:io';
+// import web_socket_channel;
+import 'package:web_socket_channel/web_socket_channel.dart';
+import 'package:web_socket_channel/io.dart';
 
 class Mission extends StatefulWidget {
   final Map<String, dynamic> mission;
@@ -67,10 +70,28 @@ Future<String> updateMission(String id) async {
 }
 
 class _MissionState extends State<Mission> {
+  final channel = IOWebSocketChannel.connect('ws://10.0.2.2:8080');
+
   List<Map<String, dynamic>> data = [];
   @override
   void initState() {
     super.initState();
+    channel.stream.listen(
+      (message) {
+        print('Connected and received message: $message');
+        fetchMissions().then((value) {
+          setState(() {
+            data = value;
+          });
+        });
+      },
+      onError: (error) {
+        print('Failed to connect: $error');
+      },
+      onDone: () {
+        print('WebSocket channel is closed.');
+      },
+    );
     fetchMissions().then((value) {
       setState(() {
         data = value;
