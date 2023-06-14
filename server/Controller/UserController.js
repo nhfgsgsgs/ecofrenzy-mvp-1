@@ -18,10 +18,10 @@ const UserController = {
             case "Start":
               mission.status = "Picked";
               break;
-            // case "Picked":
-            //   mission.status = "Done";
-            //   mission.isDone = true;
-            //   break;
+            case "Pending":
+              mission.status = "Done";
+              mission.isDone = true;
+              break;
           }
           await user.save();
           return res.status(200).json({
@@ -37,10 +37,10 @@ const UserController = {
             case "Start":
               mission.status = "Picked";
               break;
-            // case "Picked":
-            //   mission.status = "Done";
-            //   mission.isDone = true;
-            //   break;
+            case "Pending":
+              mission.status = "Done";
+              mission.isDone = true;
+              break;
           }
           await user.save();
           return res.status(200).json({
