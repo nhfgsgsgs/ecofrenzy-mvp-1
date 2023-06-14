@@ -34,7 +34,7 @@ module.exports.upload = async (req, res, next) => {
         mission: mission,
       }),
       TopicArn:
-        process.env.IMAGE_CHALLENGE_NOTIFICATION_TOPIC_ARN,
+        process.env.IMAGE_CHALLENGE_NOTIFICATION_TOPIC,
     };
     var publishTextPromise = new AWS.SNS({ apiVersion: "2010-03-31" })
       .publish(params)
