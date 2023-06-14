@@ -24,6 +24,7 @@ def lambda_handler(event, context):
     url = message_data["url"]
     bucket = url.split("/")[2].split(".")[0]
     key = "/".join(url.split("/")[3:])
+    mission = message_data['mission']
     vefications = message_data["mission"]['verification']
     verif_questions = []
     desired_answers = []
