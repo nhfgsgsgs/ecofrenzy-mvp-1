@@ -23,11 +23,14 @@ def lambda_handler(event, context):
     url = message_data["url"]
     bucket = url.split("/")[2].split(".")[0]
     key = "/".join(url.split("/")[3:])
-    mission = message_data["mission"]
-    verif_questions = mission['verification'][0]["question"] #should be as type list of questions
-    desired_answers = mission['verification'][0]["desiredAnswer"] #as type list of answers respectively
+    vefications = message_data["mission"]['verification']
+    verif_questions = []
+    desired_answers = []
+    for vefication in vefications:
+        verif_questions.append(vefication["question"]) #should be as type list of questions
+        desired_answers.append(vefication["desiredAnswer"]) #as type list of answers respectively
     
-    print(verif_questions, desired_answers)
+    # print(verif_questions, desired_answers)
 
     # Moderation with Amazon Rekognition
     response_rekognition = rekognition_client.detect_moderation_labels(
@@ -50,31 +53,21 @@ def lambda_handler(event, context):
     # print(response_rekognition)
 
     # VQA with Amazon SageMaker
-    request_body = {
-        "question": verif_questions,
-        "image": url,
-    }
-    payload = json.dumps(request_body)
-
-    print("Request payload for " + key)
-    print(payload)
-
-    print("Invoking SageMaker endpoint: " + endpoint_name)
-
-    response_sagemaker = sagemaker_runtime_client.invoke_endpoint(
+    pass_one_question = False
+    for verif_question,desired_answer in zip(verif_questions,desired_answers):
+        request_body = {
+            "question": verif_questions,
+            "image": url,
+        }
+        payload = json.dumps(request_body)
+        response_sagemaker = sagemaker_runtime_client.invoke_endpoint(
         EndpointName=endpoint_name,
         ContentType="application/json",
         Body=payload,
-    )
-
-    response_payload = json.load(response_sagemaker["Body"])
-
-    # print("VQA result for " + key)
-    # print(response_payload)
-
-    #Process the VQA response
-    pass_one_question = False
-    for question, desired_answer in zip(verif_questions, desired_answers):
+        )
+        response_payload = json.load(response_sagemaker["Body"])
+        # print("Request payload for " + key)
+        # print(payload)
         highest_score = 0
         best_answer = None
 
@@ -86,6 +79,14 @@ def lambda_handler(event, context):
         if highest_score > 0.7 and best_answer == desired_answer:
             pass_one_question = True
             break
+
+        
+    # print("Invoking SageMaker endpoint: " + endpoint_name)
+
+    # print("VQA result for " + key)
+    # print(response_payload)
+
+    #Process the VQA response
     if pass_one_question:
         #Calling API to update mission status
         #Should call Update_Mission here 
