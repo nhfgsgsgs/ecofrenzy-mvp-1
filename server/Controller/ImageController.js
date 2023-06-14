@@ -21,7 +21,6 @@ module.exports.upload = async (req, res, next) => {
       },
       { new: true }
     );
-    console.log(updateUser);
     console.log(result);
     const mission = user?.todayMission?.filter((mission) => {
       return mission.status == "Picked";
@@ -55,6 +54,7 @@ module.exports.upload = async (req, res, next) => {
       message: "Image uploaded successfully",
       image: result,
       mission: mission,
+      params: params,
     });
   } catch (err) {
     console.log(err.message);
