@@ -1,11 +1,9 @@
-
-
 import 'package:flutter/material.dart';
-import 'mission.dart';
-import 'upload.dart';
 import 'firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter/services.dart';
+import 'package:my_app/screens/challenge_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -64,44 +62,16 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(
+        const SystemUiOverlayStyle(statusBarColor: Colors.transparent));
     return MaterialApp(
-      title: 'Flutter Demo',
+      debugShowCheckedModeBanner: false,
+      title: 'EcoFrenzy',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: DefaultTabController(
-        length: 2, // Number of tabs
-        child: Scaffold(
-          appBar: AppBar(
-            title: const Text('Flutter Demo'),
-            bottom: const TabBar(
-              tabs: [
-                Tab(
-                    icon: Icon(Icons.star),
-                    text:
-                        "Mission"), // Replace Icons.mission with your preferred icon
-                Tab(
-                    icon: Icon(Icons.star),
-                    text:
-                        "Upload"), // Replace Icons.empty with your preferred icon
-              ],
-            ),
-          ),
-          body: const TabBarView(
-            children: [
-              Mission(mission: {}), // Your Mission screen
-              Upload() // Your empty screen
-            ],
-          ),
-          floatingActionButton: FloatingActionButton(
-            onPressed: () {
-              showNotification();
-            },
-            child: const Icon(Icons.notifications),
-          ),
-        ),
-      ),
+      home: ChallengeScreen(),
     );
   }
 }
