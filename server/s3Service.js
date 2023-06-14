@@ -20,7 +20,7 @@ exports.s3Uploadv3 = async (file) => {
   return {
     Key: param.Key,
     Location: `https://${param.Bucket}.s3.amazonaws.com/${param.Key}`,
-    param,
+    // param,
     response,
   };
 };
