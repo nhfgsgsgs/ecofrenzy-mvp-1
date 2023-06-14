@@ -12,6 +12,10 @@ Parameters:
     Type: String
     Description: "SNS Topic for uploaded image & corresponding challenge notifications"
 
+  ImageChallengeNotificationTopicArn:
+    Type: String
+    Description: "Arn of SNS Topic for uploaded image & corresponding challenge notifications"
+
 Resources:
   ExpressApi:
     Type: AWS::Serverless::Api
@@ -67,6 +71,10 @@ Resources:
             RestApiId: !Ref ExpressApi
             Path: "/{proxy+}"
             Method: ANY
+      Environment:
+        Variables:
+          UPLOAD_IMAGE_BUCKET: !Ref UploadImageBucket
+          IMAGE_CHALLENGE_NOTIFICATION_TOPIC_ARN: !Ref ImageChallengeNotificationTopicArn
 
   ExpressEventBridge:
     Type: AWS::Serverless::Function
@@ -98,4 +106,4 @@ Resources:
 Outputs:
   ExpressApiEndpoint:
     Description: "API Gateway endpoint URL for Prod stage for Express function"
-    Value: !Sub "https://${ExpressApi}.execute-api.${AWS::Region}.amazonaws.com/prod/"
+    Value: !Sub "https://${ExpressApi}.execute-api.${AWS::Region}.amazonaws.com/prod"

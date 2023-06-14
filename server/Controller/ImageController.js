@@ -8,11 +8,11 @@ AWS.config.update({ region: "ap-southeast-1" });
 module.exports.upload = async (req, res, next) => {
   try {
     const file = req.file;
-    const id = req.params.id;
-    const result = await s3Uploadv3(file);
-    const user = await User.findById(id);
+    const user_id = req.params.id;
+    const result = await s3Uploadv3(file, user_id);
+    const user = await User.findById(user_id);
     const updateUser = await User.updateOne(
-      { _id: id, "todayMission.status": { $in: ["Picked", "Pending"] } },
+      { _id: user_id, "todayMission.status": { $in: ["Picked", "Pending"] } },
       {
         $set: {
           "todayMission.$.url": result?.Location,
@@ -34,7 +34,7 @@ module.exports.upload = async (req, res, next) => {
         mission: mission,
       }),
       TopicArn:
-        "arn:aws:sns:ap-southeast-1:885537931206:ImageChallengeNotificationTopic",
+        process.env.IMAGE_CHALLENGE_NOTIFICATION_TOPIC_ARN,
     };
     var publishTextPromise = new AWS.SNS({ apiVersion: "2010-03-31" })
       .publish(params)

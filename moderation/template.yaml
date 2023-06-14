@@ -4,6 +4,10 @@ Description: >
   Image moderation stack for EcoFrenzy
 
 Parameters:
+  ExpressApiEndpoint:
+    Type: String
+    Description: "API Gateway endpoint URL for Prod stage for Express function"
+
   ImageChallengeNotificationTopic:
     Type: String
     Description: "SNS Topic for uploaded image & corresponding challenge notifications"
@@ -162,3 +166,6 @@ Resources:
           Type: SNS
           Properties:
             Topic: !Ref ImageChallengeNotificationTopic
+      Environment:
+        Variables:
+          EXPRESS_API_ENDPOINT: !Ref ExpressApiEndpoint

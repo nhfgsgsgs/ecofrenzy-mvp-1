@@ -16,6 +16,7 @@ Resources:
       Parameters:
         UploadImageBucket: !GetAtt Storage.Outputs.UploadImageBucket
         ImageChallengeNotificationTopic: !GetAtt Storage.Outputs.ImageChallengeNotificationTopic
+        ImageChallengeNotificationTopicArn: !GetAtt Storage.Outputs.ImageChallengeNotificationTopicArn
 
   Moderation:
     Type: AWS::Serverless::Application
@@ -23,6 +24,7 @@ Resources:
       Location: moderation/template.yaml
       Parameters:
         ImageChallengeNotificationTopic: !GetAtt Storage.Outputs.ImageChallengeNotificationTopic
+        ExpressApiEndpoint: !GetAtt Api.Outputs.ExpressApiEndpoint
 
 Outputs:
   ExpressApiEndpoint:
