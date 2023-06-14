@@ -12,7 +12,7 @@ module.exports.upload = async (req, res, next) => {
     const result = await s3Uploadv3(file);
     const user = await User.findById(id);
     const updateUser = await User.updateOne(
-      { _id: id, "todayMission.status": "Picked" },
+      { _id: id, "todayMission.status": { $in: ["Picked", "Pending"] } },
       {
         $set: {
           "todayMission.$.url": result?.Location,
