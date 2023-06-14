@@ -1,7 +1,5 @@
 boto3>=1.26.153
 requests>=2.31.0
-websocket-client>=1.0.0
-
 firebase-admin>=5.0.1
 
 

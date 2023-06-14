@@ -8,10 +8,7 @@ import firebase_admin
 rekognition_client = boto3.client("rekognition")
 sagemaker_runtime_client = boto3.client("sagemaker-runtime")
 ssm_client = boto3.client("ssm")
-sns_client = boto3.client(
-    "sns",
-    region_name="ap-southeast-1",
-)
+sns_client = boto3.client("sns")
 
 api_endpoint = os.environ["EXPRESS_API_ENDPOINT"]
 sns_topic_arn = os.environ["SNS_COMPLETE_CHALLENGE_TOPIC"]
