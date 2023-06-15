@@ -63,12 +63,13 @@ Resources:
       ServiceToken: !GetAtt SNSPlatformApplicationSetupFunction.Arn
       Platform: GCM
       ApplicationName: EcoFrenzy-Android
-  
-  SNSAppSubscription:
-    Type: AWS::SNS::Subscription
+
+  SNSCompleteChallengeTopic:
+    Type: AWS::SNS::Topic
     Properties:
-      TopicArn: !Ref SNSCompleteChallengeTopic
-      Protocol: application
-      Endpoint: !GetAtt SNSPlatformApplication.Arn
-      RawMessageDelivery: true
+      TopicName: SNSCompleteChallengeTopic
       
+Outputs:
+    SNSCompleteChallengeTopic:
+      Description: "Arn of SNS Topic for complete challenge notifications"
+      Value: !Ref SNSCompleteChallengeTopic

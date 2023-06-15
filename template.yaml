@@ -29,7 +29,7 @@ Resources:
       Parameters:
         ImageChallengeNotificationTopic: !GetAtt Storage.Outputs.ImageChallengeNotificationTopic
         ExpressApiEndpoint: !GetAtt Api.Outputs.ExpressApiEndpoint
-        SNSCompleteChallengeTopic: !GetAtt Storage.Outputs.SNSCompleteChallengeTopic
+        SNSCompleteChallengeTopic: !GetAtt Notification.Outputs.SNSCompleteChallengeTopic
 
 Outputs:
   ExpressApiEndpoint:
