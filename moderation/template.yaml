@@ -182,5 +182,3 @@ Resources:
         Variables:
           EXPRESS_API_ENDPOINT: !Ref ExpressApiEndpoint
           SNS_COMPLETE_CHALLENGE_TOPIC: !Ref SNSCompleteChallengeTopic
-
-  
