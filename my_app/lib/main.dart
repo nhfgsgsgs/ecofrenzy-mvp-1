@@ -25,11 +25,31 @@ void main() async {
     sound: true,
   );
 
+  if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+    print('Notification permission granted');
+  } else {
+    print('Notification permission denied');
+  }
+
+  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    print('Got a message whilst in the foreground!');
+    print('Message data: ${message.data}');
+
+    if (message.notification != null) {
+      print(
+          'Message also contained a notification: ${message.notification!.body}');
+    }
+  });
+
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
+
+  void initState() {
+    print("initState");
+  }
 
   @override
   Widget build(BuildContext context) {
