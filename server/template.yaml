@@ -75,6 +75,7 @@ Resources:
         Variables:
           UPLOAD_IMAGE_BUCKET: !Ref UploadImageBucket
           IMAGE_CHALLENGE_NOTIFICATION_TOPIC: !Ref ImageChallengeNotificationTopic
+          SNS_COMPLETE_CHALLENGE_TOPIC: !Ref SNSCompleteChallengeTopic
 
   ExpressEventBridge:
     Type: AWS::Serverless::Function
