@@ -4,6 +4,11 @@ Description: >
   Root stack for EcoFrenzy backend
 
 Resources:
+  Notification:
+    Type: AWS::Serverless::Application
+    Properties:
+      Location: notification/template.yaml
+
   Storage:
     Type: AWS::Serverless::Application
     Properties:

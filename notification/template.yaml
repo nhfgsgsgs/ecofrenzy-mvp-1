@@ -1,0 +1,74 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  SNS Platform Application and Topics for EcoFrenzy
+
+Resources:
+  SNSPlatformApplicationSetupRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: SNSPlatformApplicationSetupRole
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Policies:
+        - PolicyName: SNSPlatformApplicationSetupPolicy
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - "sns:CreatePlatformApplication"
+                  - "sns:CreatePlatformEndpoint"
+                  - "sns:DeleteEndpoint"
+                  - "sns:DeletePlatformApplication"
+                  - "sns:GetEndpointAttributes"
+                  - "sns:GetPlatformApplicationAttributes"
+                  - "sns:SetEndpointAttributes"
+                  - "sns:SetPlatformApplicationAttributes"
+                  - "sns:Subscribe"
+                  - "sns:Unsubscribe"
+                Resource: "*"
+        - PolicyName: LambdaExecution
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - "logs:CreateLogGroup"
+                  - "logs:CreateLogStream"
+                  - "logs:PutLogEvents"
+                Resource: "arn:aws:logs:*:*:*"
+
+  SNSPlatformApplicationSetupFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: lambda_handler.lambda_handler
+      Runtime: python3.10
+      CodeUri: create_sns_platform/
+      Role: !GetAtt SNSPlatformApplicationSetupRole.Arn
+      Environment:
+        Variables:
+          FCM_API_KEY: '{{resolve:ssm:fcm_api_key_android}}'
+
+  SNSPlatformApplication:
+    Type: Custom::SNSPlatformApplication
+    Properties:
+      ServiceToken: !GetAtt SNSPlatformApplicationSetupFunction.Arn
+      Platform: GCM
+      ApplicationName: EcoFrenzy-Android
+  
+  SNSAppSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      TopicArn: !Ref SNSCompleteChallengeTopic
+      Protocol: application
+      Endpoint: !GetAtt SNSPlatformApplication.Arn
+      RawMessageDelivery: true
+      
