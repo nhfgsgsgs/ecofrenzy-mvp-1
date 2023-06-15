@@ -12,6 +12,10 @@ Parameters:
     Type: String
     Description: "Arn of SNS Topic for uploaded image & corresponding challenge notifications"
 
+  SNSCompleteChallengeTopic:
+    Type: String
+    Description: "SNS Topic for complete challenge notifications"
+
 Resources:
   ExpressApi:
     Type: AWS::Serverless::Api
