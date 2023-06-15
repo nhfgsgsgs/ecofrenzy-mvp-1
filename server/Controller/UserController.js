@@ -1,12 +1,17 @@
 const User = require("../Models/User");
 const Mission = require("../Models/Mission");
 const Storage = require("../Models/Storage");
+const AWS = require("aws-sdk");
+
+AWS.config.update({ region: "ap-southeast-1" });
 
 const UserController = {
   updateTodayMission: async (req, res) => {
     try {
       const { userId, missionId } = req.body;
+      console.log(userId);
       const user = await User.findOne({ _id: userId });
+      console.log(user);
       if (user) {
         const missions = user?.todayMission?.filter((mission) => {
           return mission.isDone == false && mission.status != "Start";
@@ -86,17 +91,13 @@ const UserController = {
         todayMission: await Mission.aggregate([
           { $sample: { size: 3 } },
           {
-            $project: {
-              _id: 1,
-              name: 1,
-              category: 1,
-              description: 1,
-              point: 1,
-            },
+            $project: {},
           },
           {
             $addFields: {
               isDone: false,
+              status: "Start",
+              url: "",
             },
           },
         ]),
@@ -105,6 +106,27 @@ const UserController = {
         user: user._id,
         historyMission: [],
       });
+
+      const sns = new AWS.SNS({ apiVersion: "2010-03-31" });
+      const deviceToken =
+        "ejOjK-HNSp29VFDQW3o_za:APA91bGu_xPHJ1-qzRtI3EiSngSZ0eTgRM95sG3CPsGQU30iHEROAlQui2EOuxzUwo-hj5Qoq8WPhr3_tD4N7abog-BkMaNK7Cvvd1rxik4pw4r99cjKHHtVlN7gZlypSFOPiYmL0Jvs";
+      const platformApplicationArn =
+        "arn:aws:sns:ap-southeast-1:885537931206:app/GCM/EcoFrenzy-Android";
+
+      sns.createPlatformEndpoint(
+        {
+          PlatformApplicationArn: platformApplicationArn,
+          Token: deviceToken,
+        },
+        (err, data) => {
+          if (err) {
+            console.log("Error creating platform endpoint:", err);
+          } else {
+            console.log("Platform endpoint created:", data.EndpointArn);
+          }
+        }
+      );
+
       return res.status(200).json({
         success: true,
         message: "User created successfully",

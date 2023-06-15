@@ -6,6 +6,7 @@ import 'package:my_app/service/challenge_service.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ChallengeScreen extends StatefulWidget {
   const ChallengeScreen({Key? key}) : super(key: key);
@@ -25,6 +26,8 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
   }
 
   Future uploadImage() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final id = prefs.getString('id');
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
 
@@ -36,8 +39,7 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
     File file = File(pickedFile.path);
     print(file.path);
 
-    var uri = Uri.parse(
-        "https://ea9pgpvvaa.execute-api.ap-southeast-1.amazonaws.com/prod/api/user/647f4871cba2f4670727a9a6/upload");
+    var uri = Uri.parse("http://192.168.1.163:3000/api/user/$id/upload");
     var request = http.MultipartRequest('POST', uri);
 
     request.files.add(await http.MultipartFile.fromPath('file', file.path,
@@ -228,11 +230,13 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
             ? const Icon(Icons.check, color: Colors.green)
             : ElevatedButton(
                 onPressed: () {
-                  challengeService.updateChallenge(challenge.id).then((_) {
-                    setState(() {
-                      futureChallenges = challengeService.fetchChallenges();
+                  if (challenge.status != "Pending") {
+                    challengeService.updateChallenge(challenge.id).then((_) {
+                      setState(() {
+                        futureChallenges = challengeService.fetchChallenges();
+                      });
                     });
-                  });
+                  }
                 },
                 style: ButtonStyle(
                   backgroundColor:

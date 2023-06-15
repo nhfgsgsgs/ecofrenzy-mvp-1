@@ -8,6 +8,9 @@ Resources:
     Type: AWS::Serverless::Application
     Properties:
       Location: notification/template.yaml
+      Parameters:
+        SNSCompleteChallengeTopic: !GetAtt Storage.Outputs.SNSCompleteChallengeTopic
+        
 
   Storage:
     Type: AWS::Serverless::Application
