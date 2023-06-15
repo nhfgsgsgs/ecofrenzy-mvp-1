@@ -22,33 +22,6 @@ except Exception as e:
     raise e
 
 
-cred = credentials.Certificate(
-    "ecofrenzy-ae321-firebase-adminsdk-43wxc-969954c961.json"
-)
-initialize_app(cred)
-
-
-def send_fcm_notification(topic_arn, message, fcm_token):
-    # Gửi thông báo SNS
-    response = sns_client.publish(TopicArn=topic_arn, Message=message)
-
-    # Kiểm tra kết quả gửi thông báo SNS
-    if response["ResponseMetadata"]["HTTPStatusCode"] == 200:
-        print("Successfully sent SNS notification")
-    else:
-        print("Failed to send SNS notification")
-
-    # Gửi thông báo FCM
-    notification = messaging.Notification(title="Notification Title", body=message)
-    message = messaging.Message(notification=notification, token=fcm_token)
-
-    try:
-        response = messaging.send(message)
-        print("Successfully sent FCM notification:", response)
-    except Exception as e:
-        print("Failed to send FCM notification:", e)
-
-
 def lambda_handler(event, context):
     # Parse the SNS message
     message = event["Records"][0]["Sns"]["Message"]
@@ -155,12 +128,6 @@ def lambda_handler(event, context):
                 "Failed to update mission status via API. Response code:",
                 response.status_code,
             )
-        send_fcm_notification(
-            sns_topic_arn,
-            "Image is verified",
-            "BMN2n6FTAG1FJDpS_zh4R7jufjcxR6FsaugOpP0vaMpw7sYA02ryFJEeLyOLkr7ozpFO1g62y5wZrVXKTDS3hTc",
-        )
-
     else:
         # Notify user that image isnot verified relation to the challenge.And user should reupload the image
         print("Image is not verified. Reupload is required!")
