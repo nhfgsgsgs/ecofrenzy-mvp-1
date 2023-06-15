@@ -4,23 +4,7 @@ const storageSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
   },
-  historyMission: [
-    {
-      name: {
-        type: String,
-      },
-      category: {
-        type: String,
-      },
-      point: {
-        type: Number,
-      },
-      isDone: {
-        type: Boolean,
-        default: false,
-      },
-    },
-  ],
+  historyMission: [],
 });
 
 const Storage = mongoose.model("Storage", storageSchema);

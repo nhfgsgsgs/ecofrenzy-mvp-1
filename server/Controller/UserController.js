@@ -91,7 +91,17 @@ const UserController = {
         todayMission: await Mission.aggregate([
           { $sample: { size: 3 } },
           {
-            $project: {},
+            $project: {
+              _id: 1,
+              name: 1,
+              point: 1,
+              category: 1,
+              impact: 1,
+              description: 1,
+              level: 1,
+              creativity: 1,
+              verification: 1,
+            },
           },
           {
             $addFields: {
@@ -112,6 +122,9 @@ const UserController = {
         "ejOjK-HNSp29VFDQW3o_za:APA91bGu_xPHJ1-qzRtI3EiSngSZ0eTgRM95sG3CPsGQU30iHEROAlQui2EOuxzUwo-hj5Qoq8WPhr3_tD4N7abog-BkMaNK7Cvvd1rxik4pw4r99cjKHHtVlN7gZlypSFOPiYmL0Jvs";
       const platformApplicationArn =
         "arn:aws:sns:ap-southeast-1:885537931206:app/GCM/EcoFrenzy-Android";
+
+      const topicArn =
+        "arn:aws:sns:ap-southeast-1:885537931206:endpoint/GCM/EcoFrenzy-Android/3992b70e-5cd0-35db-b05f-0c57b5a75388";
 
       sns.createPlatformEndpoint(
         {

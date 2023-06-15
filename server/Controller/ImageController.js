@@ -23,20 +23,19 @@ module.exports.upload = async (req, res, next) => {
     );
     console.log(result);
     const mission = user?.todayMission?.filter((mission) => {
-      return mission.status == "Picked";
+      return mission.status == "Picked" || mission.status == "Pending";
     })[0];
     console.log(mission);
     // call SNS aws
-    var params = {
+   const params = {
       Message: JSON.stringify({
         userId: user._id,
         url: result?.Location,
         mission: mission,
       }),
-      TopicArn:
-        process.env.IMAGE_CHALLENGE_NOTIFICATION_TOPIC,
+      TopicArn: process.env.IMAGE_CHALLENGE_NOTIFICATION_TOPIC,
     };
-    var publishTextPromise = new AWS.SNS({ apiVersion: "2010-03-31" })
+    const publishTextPromise = new AWS.SNS({ apiVersion: "2010-03-31" })
       .publish(params)
       .promise();
     publishTextPromise

@@ -153,7 +153,10 @@ Resources:
               - Effect: Allow
                 Action:
                   - "sns:Publish"
-                Resource: !Ref SNSCompleteChallengeTopic
+                Resource: 
+                  - !Ref SNSCompleteChallengeTopic
+                  - "arn:aws:sns:ap-southeast-1:885537931206:app/GCM/EcoFrenzy-Android"
+                  - "arn:aws:sns:ap-southeast-1:885537931206:SNSCompleteChallengeTopic"
         - PolicyName: LambdaExecution
           PolicyDocument:
             Version: "2012-10-17"
