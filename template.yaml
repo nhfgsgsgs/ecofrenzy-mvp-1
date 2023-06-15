@@ -22,6 +22,7 @@ Resources:
       Parameters:
         UploadImageBucket: !GetAtt Storage.Outputs.UploadImageBucket
         ImageChallengeNotificationTopic: !GetAtt Storage.Outputs.ImageChallengeNotificationTopic
+        SNSCompleteChallengeTopic: !GetAtt Notification.Outputs.SNSCompleteChallengeTopic
 
   Moderation:
     Type: AWS::Serverless::Application
