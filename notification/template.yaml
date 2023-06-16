@@ -73,3 +73,7 @@ Outputs:
     SNSCompleteChallengeTopic:
       Description: "Arn of SNS Topic for complete challenge notifications"
       Value: !Ref SNSCompleteChallengeTopic
+    
+    SNSPlatformApplication:
+      Description: "Arn of SNS Platform Application for Android"
+      Value: !Ref SNSPlatformApplication

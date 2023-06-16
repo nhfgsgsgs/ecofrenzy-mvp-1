@@ -7,6 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 class ChallengeScreen extends StatefulWidget {
   const ChallengeScreen({Key? key}) : super(key: key);
@@ -18,6 +19,7 @@ class ChallengeScreen extends StatefulWidget {
 class _ChallengeScreenState extends State<ChallengeScreen> {
   final ChallengeService challengeService = ChallengeService();
   late Future<List<Challenge>> futureChallenges;
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
 
   @override
   void initState() {
@@ -39,14 +41,19 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
     File file = File(pickedFile.path);
     print(file.path);
 
-    var uri = Uri.parse("http://192.168.1.163:3000/api/user/$id/upload");
+    var uri = Uri.parse(
+        "https://ea9pgpvvaa.execute-api.ap-southeast-1.amazonaws.com/prod/api/user/$id/upload");
     var request = http.MultipartRequest('POST', uri);
 
     request.files.add(await http.MultipartFile.fromPath('file', file.path,
         filename: file.path.split('/').last,
         contentType: MediaType('image', 'png')));
+    request.fields['deviceToken'] = await messaging.getToken() ?? '';
 
     var response = await request.send();
+    setState(() {
+      futureChallenges = challengeService.fetchChallenges();
+    });
 
     print(response.statusCode);
     print(response.reasonPhrase);
@@ -122,7 +129,7 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
           borderRadius: BorderRadius.circular(10),
         ),
         elevation: 0,
-        backgroundColor: Colors.green,
+        backgroundColor: Colors.blueAccent,
         onPressed: uploadImage,
         child: const Icon(Icons.add),
       ),
@@ -215,22 +222,51 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
     );
   }
 
+  // print the challenge card
   Widget _buildChallengeCard(BuildContext context, Challenge challenge) {
+    final listProps = [
+      {
+        "category": "Waste management",
+        "color": "#0000FF",
+      },
+      {
+        "category": "Transportation",
+        "color": "#00FF00",
+      },
+      {
+        "category": "Consumption",
+        "color": "#0000FF",
+      },
+    ];
+
+    // get the color of the category
+    Color getColor(String category) {
+      for (var i = 0; i < listProps.length; i++) {
+        if (listProps[i]["category"] == category) {
+          String? hexColor = listProps[i]["color"]?.replaceAll("#", "");
+          return Color(int.parse('FF$hexColor', radix: 16));
+        }
+      }
+      return const Color(0xFFFF0000); // default color
+    }
+
     return Container(
       padding: const EdgeInsets.all(15),
       margin: const EdgeInsets.only(top: 20),
       decoration: BoxDecoration(
-        color: Colors.green.shade200,
+        color: getColor(challenge.category),
         borderRadius: BorderRadius.circular(20),
       ),
       child: ListTile(
+        tileColor: getColor(challenge.category), // set background color here
         title: Text(challenge.name,
             style: const TextStyle(fontSize: 20, color: Colors.white)),
         trailing: challenge.isDone
             ? const Icon(Icons.check, color: Colors.green)
             : ElevatedButton(
                 onPressed: () {
-                  if (challenge.status != "Pending") {
+                  if (challenge.status != "Pending" &&
+                      challenge.status != "Picked") {
                     challengeService.updateChallenge(challenge.id).then((_) {
                       setState(() {
                         futureChallenges = challengeService.fetchChallenges();

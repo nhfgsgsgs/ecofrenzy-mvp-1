@@ -118,18 +118,18 @@ const UserController = {
       });
 
       const sns = new AWS.SNS({ apiVersion: "2010-03-31" });
-      const deviceToken =
-        "ejOjK-HNSp29VFDQW3o_za:APA91bGu_xPHJ1-qzRtI3EiSngSZ0eTgRM95sG3CPsGQU30iHEROAlQui2EOuxzUwo-hj5Qoq8WPhr3_tD4N7abog-BkMaNK7Cvvd1rxik4pw4r99cjKHHtVlN7gZlypSFOPiYmL0Jvs";
-      const platformApplicationArn =
-        "arn:aws:sns:ap-southeast-1:885537931206:app/GCM/EcoFrenzy-Android";
+      // const deviceToken =
+      //   "ejOjK-HNSp29VFDQW3o_za:APA91bGu_xPHJ1-qzRtI3EiSngSZ0eTgRM95sG3CPsGQU30iHEROAlQui2EOuxzUwo-hj5Qoq8WPhr3_tD4N7abog-BkMaNK7Cvvd1rxik4pw4r99cjKHHtVlN7gZlypSFOPiYmL0Jvs";
+      // const platformApplicationArn =
+      //   "arn:aws:sns:ap-southeast-1:885537931206:app/GCM/EcoFrenzy-Android";
 
-      const topicArn =
-        "arn:aws:sns:ap-southeast-1:885537931206:endpoint/GCM/EcoFrenzy-Android/3992b70e-5cd0-35db-b05f-0c57b5a75388";
+      // const topicArn =
+      //   "arn:aws:sns:ap-southeast-1:885537931206:endpoint/GCM/EcoFrenzy-Android/3992b70e-5cd0-35db-b05f-0c57b5a75388";
 
       sns.createPlatformEndpoint(
         {
-          PlatformApplicationArn: platformApplicationArn,
-          Token: deviceToken,
+          PlatformApplicationArn: process.env.SNS_PLATFORM_APPLICATION,
+          Token: req.body.deviceToken,
         },
         (err, data) => {
           if (err) {

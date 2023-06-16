@@ -16,6 +16,10 @@ Parameters:
     Type: String
     Description: "SNS Topic for complete challenge notifications"
 
+  SNSPlatformApplication:
+    Type: String
+    Description: "SNS Platform Application Arn for sending push notifications"
+
 Resources:
   ExpressApi:
     Type: AWS::Serverless::Api
@@ -54,7 +58,11 @@ Resources:
               - Effect: Allow
                 Action:
                   - sns:Publish
-                Resource: !Ref ImageChallengeNotificationTopic
+                  - sns:CreatePlatformEndpoint
+                Resource: 
+                - !Ref ImageChallengeNotificationTopic
+                - !Ref SNSCompleteChallengeTopic
+                - !Ref SNSPlatformApplication
 
   ExpressFunction:
     Type: AWS::Serverless::Function
@@ -76,6 +84,7 @@ Resources:
           UPLOAD_IMAGE_BUCKET: !Ref UploadImageBucket
           IMAGE_CHALLENGE_NOTIFICATION_TOPIC: !Ref ImageChallengeNotificationTopic
           SNS_COMPLETE_CHALLENGE_TOPIC: !Ref SNSCompleteChallengeTopic
+          SNS_PLATFORM_APPLICATION: !Ref SNSPlatformApplication
 
   ExpressEventBridge:
     Type: AWS::Serverless::Function

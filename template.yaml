@@ -9,7 +9,7 @@ Resources:
     Properties:
       Location: notification/template.yaml
         
-
+        
   Storage:
     Type: AWS::Serverless::Application
     Properties:
@@ -23,6 +23,7 @@ Resources:
         UploadImageBucket: !GetAtt Storage.Outputs.UploadImageBucket
         ImageChallengeNotificationTopic: !GetAtt Storage.Outputs.ImageChallengeNotificationTopic
         SNSCompleteChallengeTopic: !GetAtt Notification.Outputs.SNSCompleteChallengeTopic
+        SNSPlatformApplication: !GetAtt Notification.Outputs.SNSPlatformApplication
 
   Moderation:
     Type: AWS::Serverless::Application

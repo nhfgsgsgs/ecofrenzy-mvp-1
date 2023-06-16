@@ -14,11 +14,11 @@ api_endpoint = os.environ["EXPRESS_API_ENDPOINT"]
 sns_topic_arn = os.environ["SNS_COMPLETE_CHALLENGE_TOPIC"]
 
 # Initialize Firebase Admin SDK
-device_token = "ejOjK-HNSp29VFDQW3o_za:APA91bGu_xPHJ1-qzRtI3EiSngSZ0eTgRM95sG3CPsGQU30iHEROAlQui2EOuxzUwo-hj5Qoq8WPhr3_tD4N7abog-BkMaNK7Cvvd1rxik4pw4r99cjKHHtVlN7gZlypSFOPiYmL0Jvs"
-platform_application_arn = (
-    "arn:aws:sns:ap-southeast-1:885537931206:app/GCM/EcoFrenzy-Android"
-)
-topic_arn = "arn:aws:sns:ap-southeast-1:885537931206:endpoint/GCM/EcoFrenzy-Android/3992b70e-5cd0-35db-b05f-0c57b5a75388"
+# device_token = "ejOjK-HNSp29VFDQW3o_za:APA91bGu_xPHJ1-qzRtI3EiSngSZ0eTgRM95sG3CPsGQU30iHEROAlQui2EOuxzUwo-hj5Qoq8WPhr3_tD4N7abog-BkMaNK7Cvvd1rxik4pw4r99cjKHHtVlN7gZlypSFOPiYmL0Jvs"
+# platform_application_arn = (
+#     "arn:aws:sns:ap-southeast-1:885537931206:app/GCM/EcoFrenzy-Android"
+# )
+# topic_arn = "arn:aws:sns:ap-southeast-1:885537931206:endpoint/GCM/EcoFrenzy-Android/3992b70e-5cd0-35db-b05f-0c57b5a75388"
 
 
 # Retrieve the endpoint name from Parameter Store
@@ -35,6 +35,7 @@ def lambda_handler(event, context):
     message = event["Records"][0]["Sns"]["Message"]
     message_data = json.loads(message)
     userId = message_data["userId"]
+    endpointArn = message_data["endpointArn"]
 
     # Retrieve the S3 bucket and key from the message
     url = message_data["url"]
@@ -140,7 +141,7 @@ def lambda_handler(event, context):
         response = sns_client.publish(
             Message="Mission completed",
             MessageStructure="string",
-            TargetArn=topic_arn,
+            TargetArn=endpointArn,
         )
 
         # In thông tin message đã gửi
