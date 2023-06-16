@@ -2,6 +2,8 @@ const { s3Uploadv3 } = require("../s3Service");
 const multer = require("multer");
 const User = require("../Models/User");
 const AWS = require("aws-sdk");
+const dotenv = require("dotenv");
+dotenv.config();
 
 AWS.config.update({ region: "ap-southeast-1" });
 

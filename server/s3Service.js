@@ -3,6 +3,8 @@ const { PutObjectCommand, S3, S3Client } = require("@aws-sdk/client-s3");
 const uuid = require("uuid").v4;
 const multer = require("multer");
 const path = require("path");
+const dotenv = require("dotenv");
+dotenv.config();
 
 exports.s3Uploadv3 = async (file, user_id) => {
   const s3client = new S3Client();
