@@ -1,9 +1,13 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:my_app/providers/challenge_notifier.dart';
 import 'firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 import 'package:my_app/screens/challenge_screen.dart';
+// import challenge service
+import 'service/challenge_service.dart';
+import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -13,7 +17,9 @@ void main() async {
   FirebaseMessaging messaging = FirebaseMessaging.instance;
   String? token = await messaging.getToken();
 
-  print("FirebaseMessaging token: $token");
+  print(token);
+
+  ChallengeService challengeService = ChallengeService();
 
   NotificationSettings settings = await messaging.requestPermission(
     alert: true,
@@ -33,7 +39,7 @@ void main() async {
 
   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
     print('Got a message whilst in the foreground!');
-    print('Message data: ${message.data}');
+    print('Message data: ${message}');
 
     if (message.notification != null) {
       print(
@@ -41,7 +47,13 @@ void main() async {
     }
   });
 
-  runApp(const MyApp());
+  // runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => ChallengeModel(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {

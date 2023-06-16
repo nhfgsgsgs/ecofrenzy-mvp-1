@@ -6,8 +6,11 @@ import 'package:my_app/service/challenge_service.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+
+import '../providers/challenge_notifier.dart';
 
 class ChallengeScreen extends StatefulWidget {
   const ChallengeScreen({Key? key}) : super(key: key);
@@ -25,6 +28,13 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
   void initState() {
     super.initState();
     futureChallenges = challengeService.fetchChallenges();
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      // When a new message arrives, fetch the challenges again
+      context.read<ChallengeModel>().fetchChallenges();
+      setState(() {
+        futureChallenges = challengeService.fetchChallenges();
+      });
+    });
   }
 
   Future uploadImage() async {
@@ -68,7 +78,8 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: _buildAppBar(),
-      body: Column(
+      body: SingleChildScrollView(
+          child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
@@ -121,7 +132,8 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
             ),
           ),
         ],
-      ),
+      )),
+      // bottomNavigationBar: _buildBottomNavigationBarTest(),
       bottomNavigationBar: _buildBottomNavigationBar(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
@@ -160,7 +172,7 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
           backgroundColor: Colors.white,
           showSelectedLabels: false,
           showUnselectedLabels: false,
-          selectedItemColor: Colors.blueAccent,
+          selectedItemColor: Colors.redAccent,
           unselectedItemColor: Colors.grey.withOpacity(0.5),
           items: const [
             BottomNavigationBarItem(
@@ -261,6 +273,8 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
         tileColor: getColor(challenge.category), // set background color here
         title: Text(challenge.name,
             style: const TextStyle(fontSize: 20, color: Colors.white)),
+        subtitle: Text(challenge.description,
+            style: const TextStyle(color: Colors.white)),
         trailing: challenge.isDone
             ? const Icon(Icons.check, color: Colors.green)
             : ElevatedButton(
