@@ -89,8 +89,16 @@ Resources:
   ExpressEventBridge:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: ../server/
-      Handler: eventBridge.handler
+      CodeUri: ../server/events/
+      Handler: challengeUpdate.handler
+      Runtime: nodejs14.x
+      MemorySize: 512
+
+  ExpressEventBridgeGenerateChallenge:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ../server/events/
+      Handler: challengeGeneration.handler
       Runtime: nodejs14.x
       MemorySize: 512
 
@@ -98,8 +106,19 @@ Resources:
     Type: AWS::Events::Rule
     Properties:
       EventBusName: default
-      Description: "Event rules for Express function"
+      Description: "Event rules for Express function for challenge updates"
       ScheduleExpression: cron(0 14 * * ? *)
+      State: ENABLED
+      Targets:
+        - Arn: !GetAtt ExpressEventBridge.Arn
+          Id: ExpressFunctionTarget
+
+  ExpressEventRuleGenerateChallenge:
+    Type: AWS::Events::Rule
+    Properties:
+      EventBusName: default
+      Description: "Event rules for Express function for challenge generation"
+      ScheduleExpression: cron(0 12 * * ? *)
       State: ENABLED
       Targets:
         - Arn: !GetAtt ExpressEventBridge.Arn
@@ -112,6 +131,14 @@ Resources:
       Action: lambda:InvokeFunction
       Principal: events.amazonaws.com
       SourceArn: !GetAtt ExpressEventRule.Arn
+
+  PermissionForEventsToInvokeLambdaGenerateChallenge:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !GetAtt ExpressEventBridgeGenerateChallenge.Arn
+      Action: lambda:InvokeFunction
+      Principal: events.amazonaws.com
+      SourceArn: !GetAtt ExpressEventRuleGenerateChallenge.Arn
 
 Outputs:
   ExpressApiEndpoint:

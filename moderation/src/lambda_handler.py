@@ -2,8 +2,6 @@ import os
 import boto3
 import json
 import requests
-from firebase_admin import messaging, initialize_app, credentials
-import firebase_admin
 
 rekognition_client = boto3.client("rekognition")
 sagemaker_runtime_client = boto3.client("sagemaker-runtime")
@@ -12,13 +10,6 @@ sns_client = boto3.client("sns")
 
 api_endpoint = os.environ["EXPRESS_API_ENDPOINT"]
 sns_topic_arn = os.environ["SNS_COMPLETE_CHALLENGE_TOPIC"]
-
-# Initialize Firebase Admin SDK
-# device_token = "ejOjK-HNSp29VFDQW3o_za:APA91bGu_xPHJ1-qzRtI3EiSngSZ0eTgRM95sG3CPsGQU30iHEROAlQui2EOuxzUwo-hj5Qoq8WPhr3_tD4N7abog-BkMaNK7Cvvd1rxik4pw4r99cjKHHtVlN7gZlypSFOPiYmL0Jvs"
-# platform_application_arn = (
-#     "arn:aws:sns:ap-southeast-1:885537931206:app/GCM/EcoFrenzy-Android"
-# )
-# topic_arn = "arn:aws:sns:ap-southeast-1:885537931206:endpoint/GCM/EcoFrenzy-Android/3992b70e-5cd0-35db-b05f-0c57b5a75388"
 
 
 # Retrieve the endpoint name from Parameter Store
@@ -139,7 +130,7 @@ def lambda_handler(event, context):
             )
 
         response = sns_client.publish(
-            Message="Mission completed",
+            Message="Image is verified. Challenge completed!",
             MessageStructure="string",
             TargetArn=endpointArn,
         )
@@ -150,3 +141,8 @@ def lambda_handler(event, context):
     else:
         # Notify user that image isnot verified relation to the challenge.And user should reupload the image
         print("Image is not verified. Reupload is required!")
+        sns_client.publish(
+            Message="Image is not verified. You should take another photo!",
+            MessageStructure="string",
+            TargetArn=endpointArn,
+        )

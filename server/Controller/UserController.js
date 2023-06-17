@@ -110,6 +110,10 @@ const UserController = {
               isDone: false,
               status: "Start",
               url: "",
+              nextMission: [],
+              age: 21,
+              gender: 'Male',
+              location: 'Urban'
             },
           },
         ]),
