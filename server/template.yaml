@@ -89,7 +89,7 @@ Resources:
   ExpressEventBridge:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: ../server/events/
+      CodeUri: ../server/
       Handler: challengeUpdate.handler
       Runtime: nodejs14.x
       MemorySize: 512
@@ -97,8 +97,8 @@ Resources:
   ExpressEventBridgeGenerateChallenge:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: ../server/events/
-      Handler: challengeGeneration.handler
+      CodeUri: ../server/
+      Handler: challengeGenerate.handler
       Runtime: nodejs14.x
       MemorySize: 512
 

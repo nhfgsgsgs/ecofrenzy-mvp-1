@@ -28,6 +28,10 @@ const missionSchema = new mongoose.Schema(
       type: String,
       enum: ["Direct", "Indirect"],
     },
+    caption: {
+      type: String,
+      default: "",
+    },
     verification: [
       {
         question: {

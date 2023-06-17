@@ -136,6 +136,8 @@ def lambda_handler(event, context):
         )
 
         # In thông tin message đã gửi
+        # print("Sent message:", response[""])
+        # print message sns đã gửi
         print("Sent message:", response["MessageId"])
 
     else:

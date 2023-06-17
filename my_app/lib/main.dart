@@ -9,6 +9,8 @@ import 'package:my_app/screens/challenge_screen.dart';
 import 'service/challenge_service.dart';
 import 'package:provider/provider.dart';
 
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -75,6 +77,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home: const ChallengeScreen(),
+      builder: EasyLoading.init(),
     );
   }
 }

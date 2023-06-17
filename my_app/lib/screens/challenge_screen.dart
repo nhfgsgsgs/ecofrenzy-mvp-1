@@ -105,7 +105,8 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
                   style: TextStyle(
                     fontFamily: 'Ridley Grotesk',
                     color: Colors.black,
-                    fontSize: 26,                  ),
+                    fontSize: 26,
+                  ),
                 ),
                 FutureBuilder<List<Challenge>>(
                   future: futureChallenges,
@@ -237,11 +238,11 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
   Widget _buildChallengeCard(BuildContext context, Challenge challenge) {
     final listProps = [
       {
-        "category": "Energy & Resources",
+        "category": "Energy and Resources",
         "color": [
           "#000000",
           "#000001",
-          ],
+        ],
         "icon": "assets/images/.png",
       },
       {
@@ -249,7 +250,7 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
         "color": [
           "#7717F3",
           "#660ED9",
-          ],
+        ],
         "icon": "assets/images/transportation.png",
       },
       {
@@ -257,15 +258,15 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
         "color": [
           "#FDAD2D",
           "#FE875C",
-          ],
+        ],
         "icon": "assets/images/consumption.png",
       },
       {
-        "category": "Waste Management",
+        "category": "Waste management",
         "color": [
           "#D92849",
           "#D43653",
-          ],
+        ],
         "icon": "assets/images/waste management.png",
       },
       {
@@ -273,19 +274,18 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
         "color": [
           "#000000",
           "#000001",
-          ],
+        ],
         "icon": "assets/images/.png",
       },
       {
-        "category": "Awareness & Innovation",
+        "category": "Awareness and Innovation",
         "color": [
           "#000000",
           "#000001",
-          ],
+        ],
         "icon": "assets/images/.png",
       }
     ];
-
 
     // get the color of the category
     List<Color> getGradientColor(String category) {
@@ -303,8 +303,6 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
       return [const Color(0xFFFF0000)]; // default color
     }
 
- 
-
     return Container(
       padding: const EdgeInsets.all(15),
       margin: const EdgeInsets.only(top: 20),
@@ -321,7 +319,8 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
         title: Text(challenge.name,
             style: const TextStyle(fontSize: 20, color: Colors.white)),
         subtitle: Text(challenge.description,
-            style: const TextStyle(color: Colors.white, fontFamily: "Ridley Grotesk")),
+            style: const TextStyle(
+                color: Colors.white, fontFamily: "Ridley Grotesk")),
         trailing: challenge.isDone
             ? const Icon(Icons.check, color: Colors.green)
             : ElevatedButton(

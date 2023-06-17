@@ -7,11 +7,11 @@ const userSchema = new mongoose.Schema(
     },
     gender: {
       type: String,
-      enum: ['Male', 'Female', 'Other']
+      enum: ["Male", "Female", "Other"],
     },
     location: {
       type: String,
-      enum: ['Urban', 'Suburban', 'Rural']
+      enum: ["Urban", "Suburban", "Rural"],
     },
     usageDay: {
       type: Number,
@@ -34,6 +34,9 @@ const userSchema = new mongoose.Schema(
           type: String,
         },
         impact: {
+          type: String,
+        },
+        caption: {
           type: String,
         },
         description: {
@@ -132,13 +135,13 @@ const userSchema = new mongoose.Schema(
     preferences: [
       {
         type: String,
-      }
+      },
     ],
     growth_plan: [
       {
         type: String,
-      }
-    ]
+      },
+    ],
   },
   { timestamps: true }
 );

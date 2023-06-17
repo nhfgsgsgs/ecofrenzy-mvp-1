@@ -3,6 +3,7 @@ class Challenge {
   final String name;
   final String description;
   final String category;
+  final String impact;
   final String status;
   final bool isDone;
 
@@ -11,6 +12,7 @@ class Challenge {
     required this.name,
     required this.description,
     required this.category,
+    required this.impact,
     required this.status,
     required this.isDone,
   });
@@ -21,6 +23,7 @@ class Challenge {
       name: json['name'],
       description: json['description'],
       category: json['category'],
+      impact: json['impact'],
       status: json['status'],
       isDone: json['isDone'],
     );
