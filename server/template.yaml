@@ -20,6 +20,10 @@ Parameters:
     Type: String
     Description: "SNS Platform Application Arn for sending push notifications"
 
+  ChallengeGenerationFunctionArn:
+    Type: String
+    Description: "Arn of Lambda function for generating challenges"
+
 Resources:
   ExpressApi:
     Type: AWS::Serverless::Api
@@ -118,6 +122,9 @@ Resources:
       Handler: challengeGenerate.handler
       Runtime: nodejs14.x
       MemorySize: 512
+      Environment:
+        Variables:
+          CHALLENGE_GENERATION_FUNCTION_ARN: !Ref ChallengeGenerationFunctionArn
 
   ExpressEventRule:
     Type: AWS::Events::Rule
