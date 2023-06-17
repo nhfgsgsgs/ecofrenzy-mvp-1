@@ -28,7 +28,6 @@ class Challenge {
       category: json['category'],
       impact: json['impact'],
       status: json['status'],
-      impact: json['impact'],
       isDone: json['isDone'],
     );
   }
