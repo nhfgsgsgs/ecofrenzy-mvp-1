@@ -69,4 +69,6 @@ const createTodayMission = async (event) => {
   }
 };
 
+module.exports = createTodayMission;
+
 exports.handler = createTodayMission;

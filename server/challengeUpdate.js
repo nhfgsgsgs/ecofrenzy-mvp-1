@@ -54,4 +54,6 @@ const updateTodayMission = async (event) => {
   }
 };
 
+module.exports = updateTodayMission;
+
 exports.handler = updateTodayMission;
