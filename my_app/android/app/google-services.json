@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "677063964559",
+    "project_id": "ecofrenzy-ae321",
+    "storage_bucket": "ecofrenzy-ae321.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:677063964559:android:fb63d5032d2e6779837dfa",
+        "android_client_info": {
+          "package_name": "com.example.my_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "677063964559-4npotchlsldeor9hsaavnb5ts4hns52j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBhmmc8u5DZqv-mbgnTLiXvQ29BQtv9ngA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "677063964559-4npotchlsldeor9hsaavnb5ts4hns52j.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

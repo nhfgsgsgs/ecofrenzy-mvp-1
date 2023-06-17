@@ -29,4 +29,6 @@
     <uses-permission android:name="android.permission.READ_MEDIA_VIDEO"/>
     <uses-permission android:name="android.permission.WRITE_MEDIA_VIDEO"/>
     <!-- permission to get image from photos -->
+    <application android:usesCleartextTraffic="true">
+    <!--  -->
 </manifest>

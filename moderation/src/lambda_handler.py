@@ -1,10 +1,25 @@
+import os
 import boto3
 import json
 import requests
+from firebase_admin import messaging, initialize_app, credentials
+import firebase_admin
 
 rekognition_client = boto3.client("rekognition")
 sagemaker_runtime_client = boto3.client("sagemaker-runtime")
 ssm_client = boto3.client("ssm")
+sns_client = boto3.client("sns")
+
+api_endpoint = os.environ["EXPRESS_API_ENDPOINT"]
+sns_topic_arn = os.environ["SNS_COMPLETE_CHALLENGE_TOPIC"]
+
+# Initialize Firebase Admin SDK
+# device_token = "ejOjK-HNSp29VFDQW3o_za:APA91bGu_xPHJ1-qzRtI3EiSngSZ0eTgRM95sG3CPsGQU30iHEROAlQui2EOuxzUwo-hj5Qoq8WPhr3_tD4N7abog-BkMaNK7Cvvd1rxik4pw4r99cjKHHtVlN7gZlypSFOPiYmL0Jvs"
+# platform_application_arn = (
+#     "arn:aws:sns:ap-southeast-1:885537931206:app/GCM/EcoFrenzy-Android"
+# )
+# topic_arn = "arn:aws:sns:ap-southeast-1:885537931206:endpoint/GCM/EcoFrenzy-Android/3992b70e-5cd0-35db-b05f-0c57b5a75388"
+
 
 # Retrieve the endpoint name from Parameter Store
 try:
@@ -20,24 +35,37 @@ def lambda_handler(event, context):
     message = event["Records"][0]["Sns"]["Message"]
     message_data = json.loads(message)
     userId = message_data["userId"]
+    endpointArn = message_data["endpointArn"]
+
     # Retrieve the S3 bucket and key from the message
     url = message_data["url"]
     bucket = url.split("/")[2].split(".")[0]
     key = "/".join(url.split("/")[3:])
-    mission = message_data['mission']
-    vefications = message_data["mission"]['verification']
+
+    # Retrieve the verification questions and desired answers from the message
+    mission = message_data["mission"]
+    vefications = mission["verification"]
     verif_questions = []
     desired_answers = []
     for vefication in vefications:
-        verif_questions.append(vefication["question"]) #should be as type list of questions
-        desired_answers.append(vefication["desiredAnswer"]) #as type list of answers respectively
-    
+        verif_questions.append(
+            vefication["question"]
+        )  # should be as type list of questions
+        desired_answers.append(
+            vefication["desiredAnswer"]
+        )  # as type list of answers respectively
+
     print(verif_questions, desired_answers)
 
     # Moderation with Amazon Rekognition
     response_rekognition = rekognition_client.detect_moderation_labels(
         Image={"S3Object": {"Bucket": bucket, "Name": key}}
     )
+
+    print("Invoking Rekognition API")
+    print("Moderation result for " + key)
+    print(response_rekognition)
+
     # Complete here to check if the image violates the policy
     moderation_labels = response_rekognition.get("ModerationLabels", [])
     # Modify this list based on your sensitivity policy
@@ -52,25 +80,26 @@ def lambda_handler(event, context):
         print("Warning: Image violates sensitivity policy. Reupload is required!")
         return
 
-    # print("Detected labels for " + key)
-    # print(response_rekognition)
+    print("Invoking SageMaker endpoint: " + endpoint_name)
 
     # VQA with Amazon SageMaker
     pass_one_question = False
-    for verif_question,desired_answer in zip(verif_questions,desired_answers):
+    for verif_question, desired_answer in zip(verif_questions, desired_answers):
         request_body = {
-            "question": verif_questions,
+            "question": verif_question,
             "image": url,
         }
         payload = json.dumps(request_body)
         response_sagemaker = sagemaker_runtime_client.invoke_endpoint(
-        EndpointName=endpoint_name,
-        ContentType="application/json",
-        Body=payload,
+            EndpointName=endpoint_name,
+            ContentType="application/json",
+            Body=payload,
         )
         response_payload = json.load(response_sagemaker["Body"])
-        # print("Request payload for " + key)
-        # print(payload)
+
+        print("Request payload for " + key)
+        print(payload)
+
         highest_score = 0
         best_answer = None
 
@@ -83,17 +112,11 @@ def lambda_handler(event, context):
             pass_one_question = True
             break
 
-        
-    # print("Invoking SageMaker endpoint: " + endpoint_name)
-
-    # print("VQA result for " + key)
-    # print(response_payload)
-
-    #Process the VQA response
+    # Process the VQA response
     if pass_one_question:
         # Calling API to update mission status
         # Should call Update_Mission here
-        url = "https://ea9pgpvvaa.execute-api.ap-southeast-1.amazonaws.com/prod/api/user/updateToday"
+        url = f"{api_endpoint}/api/user/updateToday"
 
         payload = {
             "userId": userId,
@@ -105,7 +128,7 @@ def lambda_handler(event, context):
             "Content-Type": "application/json",
         }
 
-        response = requests.post(url, headers=headers, json=payload)
+        response = requests.put(url, headers=headers, json=payload)
 
         if response.status_code == 200:
             print("Successfully updated mission status via API")
@@ -114,6 +137,15 @@ def lambda_handler(event, context):
                 "Failed to update mission status via API. Response code:",
                 response.status_code,
             )
+
+        response = sns_client.publish(
+            Message="Mission completed",
+            MessageStructure="string",
+            TargetArn=endpointArn,
+        )
+
+        # In thông tin message đã gửi
+        print("Sent message:", response["MessageId"])
 
     else:
         # Notify user that image isnot verified relation to the challenge.And user should reupload the image

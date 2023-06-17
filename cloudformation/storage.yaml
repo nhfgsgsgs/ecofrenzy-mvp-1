@@ -26,5 +26,5 @@ Outputs:
     Value: !Ref UploadImageBucket
 
   ImageChallengeNotificationTopic:
-    Description: "SNS Topic for uploaded image & corresponding challenge notifications"
+    Description: "Arn of SNS Topic for uploaded image & corresponding challenge notifications"
     Value: !Ref ImageChallengeNotificationTopic

@@ -1,12 +1,19 @@
 const User = require("../Models/User");
 const Mission = require("../Models/Mission");
 const Storage = require("../Models/Storage");
+const AWS = require("aws-sdk");
+const dotenv = require("dotenv");
+dotenv.config();
+
+AWS.config.update({ region: "ap-southeast-1" });
 
 const UserController = {
   updateTodayMission: async (req, res) => {
     try {
       const { userId, missionId } = req.body;
+      console.log(userId);
       const user = await User.findOne({ _id: userId });
+      console.log(user);
       if (user) {
         const missions = user?.todayMission?.filter((mission) => {
           return mission.isDone == false && mission.status != "Start";
@@ -89,14 +96,20 @@ const UserController = {
             $project: {
               _id: 1,
               name: 1,
-              category: 1,
-              description: 1,
               point: 1,
+              category: 1,
+              impact: 1,
+              description: 1,
+              level: 1,
+              creativity: 1,
+              verification: 1,
             },
           },
           {
             $addFields: {
               isDone: false,
+              status: "Start",
+              url: "",
             },
           },
         ]),
@@ -105,6 +118,23 @@ const UserController = {
         user: user._id,
         historyMission: [],
       });
+
+      const sns = new AWS.SNS({ apiVersion: "2010-03-31" });
+
+      sns.createPlatformEndpoint(
+        {
+          PlatformApplicationArn: process.env.SNS_PLATFORM_APPLICATION,
+          Token: req.body.deviceToken,
+        },
+        (err, data) => {
+          if (err) {
+            console.log("Error creating platform endpoint:", err);
+          } else {
+            console.log("Platform endpoint created:", data.EndpointArn);
+          }
+        }
+      );
+
       return res.status(200).json({
         success: true,
         message: "User created successfully",

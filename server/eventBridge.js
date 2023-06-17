@@ -20,68 +20,87 @@ function shuffle(array) {
   return array;
 }
 
+const getRandomMission = async () => {
+  const missions = await Mission.find();
+  const shuffledMissions = shuffle(missions);
+  const randomMissions = shuffledMissions.slice(0, 3).map((mission) => {
+    return {
+      _id: mission._id,
+      name: mission.name,
+      category: mission.category,
+      description: mission.description,
+      point: mission.point,
+      level: mission.level,
+      creativity: mission.creativity,
+      verification: mission.verification,
+      impact: mission.impact,
+    };
+  });
+  return randomMissions;
+};
+
 const createTodayMission = async (event) => {
   try {
     const storages = await Storage.find();
     const users = await User.find();
-    const missions = await Mission.find();
-    const shuffledMissions = shuffle(missions);
 
-    const randomMissions = shuffledMissions.slice(0, 3).map((mission) => {
-      return {
-        _id: mission._id,
-        name: mission.name,
-        category: mission.category,
+    // storages.map(async (storage) => {
+    //   const user = await User.findById(storage.user);
+    //   await Storage.findOneAndUpdate(
+    //     { _id: storage._id },
+    //     {
+    //       $push: {
+    //         historyMission: {
+    //           $each: user?.todayMission,
+    //         },
+    //       },
+    //     }
+    //   );
+    // });
 
-        description: mission.description,
-        point: mission.point,
-        level: mission.level,
+    for (let i = 0; i < storages.length; i++) {
+      const storage = storages[i];
+      const storage1 = await Storage.findOneAndUpdate(
+        { _id: storage._id },
+        {
+          $push: {
+            historyMission: {
+              $each: users[i]?.todayMission,
+            },
+          },
+        },
+        { new: true }
+      );
+      console.log(storage1);
+    }
 
-        creativity: mission.creativity,
-        verification: mission.verification,
+    // users.map(async (user) => {
+    //   const randomMissions = await getRandomMission();
+    //   await User.findOneAndUpdate(
+    //     { _id: user._id },
+    //     {
+    //       $set: {
+    //         todayMission: randomMissions,
+    //       },
+    //     }
+    //   );
+    // });
 
-        impact: mission.impact,
-      };
-    });
-    console.log(randomMissions);
-    const bulkOpsMission = users.map((user) => ({
-      updateOne: {
-        filter: { _id: user._id },
-        update: {
+    for (let i = 0; i < users.length; i++) {
+      const user = users[i];
+      const randomMissions = await getRandomMission();
+      const user1 = await User.findOneAndUpdate(
+        { _id: user._id },
+        {
           $set: {
             todayMission: randomMissions,
           },
         },
-      },
-    }));
-    const bulkOpsStorage = await Promise.all(
-      storages.map(async (storage) => {
-        const user = await User.findById(storage.user, {
-          "todayMission.name": 1,
-          "todayMission.category": 1,
-          "todayMission.description": 1,
-          "todayMission.point": 1,
-        });
-        console.log(user);
+        { new: true }
+      );
+      console.log(user1);
+    }
 
-        return {
-          updateOne: {
-            filter: { _id: storage._id },
-            update: {
-              $push: {
-                historyMission: {
-                  $each: user.todayMission,
-                },
-              },
-            },
-          },
-        };
-      })
-    );
-
-    await Storage.bulkWrite(bulkOpsStorage);
-
-    await User.bulkWrite(bulkOpsMission);
     console.log("done");
   } catch (error) {
     console.log("An error occurred:", error);
@@ -89,3 +108,4 @@ const createTodayMission = async (event) => {
 };
 
 exports.handler = createTodayMission;
+// createTodayMission();

@@ -4,6 +4,12 @@ Description: >
   Root stack for EcoFrenzy backend
 
 Resources:
+  Notification:
+    Type: AWS::Serverless::Application
+    Properties:
+      Location: notification/template.yaml
+        
+        
   Storage:
     Type: AWS::Serverless::Application
     Properties:
@@ -16,6 +22,8 @@ Resources:
       Parameters:
         UploadImageBucket: !GetAtt Storage.Outputs.UploadImageBucket
         ImageChallengeNotificationTopic: !GetAtt Storage.Outputs.ImageChallengeNotificationTopic
+        SNSCompleteChallengeTopic: !GetAtt Notification.Outputs.SNSCompleteChallengeTopic
+        SNSPlatformApplication: !GetAtt Notification.Outputs.SNSPlatformApplication
 
   Moderation:
     Type: AWS::Serverless::Application
@@ -23,6 +31,8 @@ Resources:
       Location: moderation/template.yaml
       Parameters:
         ImageChallengeNotificationTopic: !GetAtt Storage.Outputs.ImageChallengeNotificationTopic
+        ExpressApiEndpoint: !GetAtt Api.Outputs.ExpressApiEndpoint
+        SNSCompleteChallengeTopic: !GetAtt Notification.Outputs.SNSCompleteChallengeTopic
 
 Outputs:
   ExpressApiEndpoint:

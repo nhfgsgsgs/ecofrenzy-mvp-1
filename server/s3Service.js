@@ -3,13 +3,15 @@ const { PutObjectCommand, S3, S3Client } = require("@aws-sdk/client-s3");
 const uuid = require("uuid").v4;
 const multer = require("multer");
 const path = require("path");
+const dotenv = require("dotenv");
+dotenv.config();
 
-exports.s3Uploadv3 = async (file) => {
+exports.s3Uploadv3 = async (file, user_id) => {
   const s3client = new S3Client();
 
   const param = {
-    Bucket: "ecofrenzy-upload-img",
-    Key: `ecofrenzy/${uuid()}-${file?.originalname}`,
+    Bucket: process.env.UPLOAD_IMAGE_BUCKET,
+    Key: `${user_id}/${uuid()}-${file?.originalname}`,
     Body: file?.buffer,
     ACL: "bucket-owner-full-control",
     ContentType: file?.mimetype,
@@ -20,7 +22,6 @@ exports.s3Uploadv3 = async (file) => {
   return {
     Key: param.Key,
     Location: `https://${param.Bucket}.s3.amazonaws.com/${param.Key}`,
-    // param,
     response,
   };
 };
@@ -34,8 +35,6 @@ const fileFilter = (req, file, cb) => {
     cb(new multer.MulterError("LIMIT_UNEXPECTED_FILE"), false);
   }
 };
-
-// ["image", "jpeg"]
 
 const upload = multer({
   storage,
