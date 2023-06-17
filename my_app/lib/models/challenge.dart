@@ -2,6 +2,7 @@ class Challenge {
   final String id;
   final String name;
   final String description;
+  final String caption;
   final String category;
   final String impact;
   final String status;
@@ -11,6 +12,7 @@ class Challenge {
     required this.id,
     required this.name,
     required this.description,
+    required this.caption,
     required this.category,
     required this.impact,
     required this.status,
@@ -22,9 +24,11 @@ class Challenge {
       id: json['_id'],
       name: json['name'],
       description: json['description'],
+      caption: json['caption'],
       category: json['category'],
       impact: json['impact'],
       status: json['status'],
+      impact: json['impact'],
       isDone: json['isDone'],
     );
   }
