@@ -103,10 +103,9 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
                 const Text(
                   'Your Challenges',
                   style: TextStyle(
+                    fontFamily: 'Ridley Grotesk',
                     color: Colors.black,
-                    fontSize: 26,
-                    fontWeight: FontWeight.bold,
-                  ),
+                    fontSize: 26,                  ),
                 ),
                 FutureBuilder<List<Challenge>>(
                   future: futureChallenges,
@@ -238,43 +237,91 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
   Widget _buildChallengeCard(BuildContext context, Challenge challenge) {
     final listProps = [
       {
-        "category": "Waste management",
-        "color": "#0000FF",
+        "category": "Energy & Resources",
+        "color": [
+          "#000000",
+          "#000001",
+          ],
+        "icon": "assets/images/.png",
       },
       {
         "category": "Transportation",
-        "color": "#00FF00",
+        "color": [
+          "#7717F3",
+          "#660ED9",
+          ],
+        "icon": "assets/images/transportation.png",
       },
       {
         "category": "Consumption",
-        "color": "#0000FF",
+        "color": [
+          "#FDAD2D",
+          "#FE875C",
+          ],
+        "icon": "assets/images/consumption.png",
       },
+      {
+        "category": "Waste Management",
+        "color": [
+          "#D92849",
+          "#D43653",
+          ],
+        "icon": "assets/images/waste management.png",
+      },
+      {
+        "category": "Forestry",
+        "color": [
+          "#000000",
+          "#000001",
+          ],
+        "icon": "assets/images/.png",
+      },
+      {
+        "category": "Awareness & Innovation",
+        "color": [
+          "#000000",
+          "#000001",
+          ],
+        "icon": "assets/images/.png",
+      }
     ];
 
+
     // get the color of the category
-    Color getColor(String category) {
+    List<Color> getGradientColor(String category) {
       for (var i = 0; i < listProps.length; i++) {
         if (listProps[i]["category"] == category) {
-          String? hexColor = listProps[i]["color"]?.replaceAll("#", "");
-          return Color(int.parse('FF$hexColor', radix: 16));
+          List<String>? hexColor = listProps[i]["color"] as List<String>?;
+          List<Color> colors = [];
+          for (var i = 0; i < hexColor!.length; i++) {
+            hexColor[i] = hexColor[i].replaceAll("#", "");
+            colors.add(Color(int.parse('FF${hexColor[i]}', radix: 16)));
+          }
+          return colors;
         }
       }
-      return const Color(0xFFFF0000); // default color
+      return [const Color(0xFFFF0000)]; // default color
     }
+
+ 
 
     return Container(
       padding: const EdgeInsets.all(15),
       margin: const EdgeInsets.only(top: 20),
       decoration: BoxDecoration(
-        color: getColor(challenge.category),
+        gradient: LinearGradient(
+          colors: getGradientColor(challenge.category),
+          begin: Alignment.centerLeft,
+          end: Alignment.centerRight,
+        ),
         borderRadius: BorderRadius.circular(20),
       ),
       child: ListTile(
-        tileColor: getColor(challenge.category), // set background color here
+        // tileColor: getColor(challenge.category), // set background color here
         title: Text(challenge.name,
             style: const TextStyle(fontSize: 20, color: Colors.white)),
         subtitle: Text(challenge.description,
-            style: const TextStyle(color: Colors.white)),
+            style: const TextStyle(color: Colors.white, fontFamily: "Ridley Grotesk")),
         trailing: challenge.isDone
             ? const Icon(Icons.check, color: Colors.green)
             : ElevatedButton(
