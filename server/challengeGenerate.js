@@ -2,6 +2,11 @@ const Mission = require("./Models/Mission");
 const Storage = require("./Models/Storage");
 const User = require("./Models/User");
 const mongoose = require("mongoose");
+const AWS = require('aws-sdk');
+
+AWS.config.update({ region: "ap-southeast-1" });
+
+const lambda = new AWS.Lambda({ region: "ap-southeast-1" });
 
 mongoose
   .connect("mongodb+srv://tungjav:tungjav@cluster0.styzwwu.mongodb.net")
@@ -39,8 +44,38 @@ const getRandomMission = async () => {
   return randomMissions;
 };
 
-const generateChallenge = async () => {
-  return getRandomMission();
+const generateChallenges = async (user, storage) => {
+  // Get 3 last of historyMission
+  const last3HistoryMission = storage.historyMission.slice(-3);
+  // For each historyMission, replace missionPicked with the index of mission with the same id in givenMissions
+  const last3HistoryMissionWithIndex = last3HistoryMission.map((history) => {
+    const index = history.givenMissions.findIndex(
+      (mission) => mission._id == history.missionPicked
+    );
+    return {
+      ...history,
+      missionPicked: index + 1,
+    };
+  });
+
+  const params = {
+    FunctionName: process.env.CHALLENGE_GENERATION_FUNCTION_ARN,
+    InvocationType: "RequestResponse",
+    Payload: JSON.stringify({
+      user_data: user,
+      records: storage,
+    }),
+  }
+
+  const result = await lambda.invoke(params).promise();
+  return JSON.parse(result.Payload);
+};
+
+const getNewChallenges = async (user, storage) => {
+  if (user.usageDay <= 4) {
+    return getRandomMission();
+  }
+  return generateChallenges(user, storage);
 };
 
 const createTodayMission = async (event) => {
@@ -50,7 +85,12 @@ const createTodayMission = async (event) => {
 
     for (let i = 0; i < users.length; i++) {
       const user = users[i];
-      const newMissions = await generateChallenge();
+
+      const storage = storages.filter((storage) => {
+        return storage.user == user._id;
+      })[0];
+
+      const newMissions = await getNewChallenges(user, storage);
 
       const user1 = await User.findOneAndUpdate(
         { _id: user._id },

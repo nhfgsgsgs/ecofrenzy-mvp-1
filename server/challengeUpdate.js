@@ -24,7 +24,16 @@ const updateTodayMission = async (event) => {
         {
           $push: {
             historyMission: {
-              $each: users[i]?.todayMission,
+              $each: [
+                {
+                  usageDay: users[i].usageDay,
+                  missionPicked: users[i].todayMission.filter(
+                    (mission) => mission.status !== "Start"
+                  )[0]._id || null,
+                  isCompleted: false,
+                  givenMissions: users[i].todayMission,
+                },
+              ],
             },
           },
         },

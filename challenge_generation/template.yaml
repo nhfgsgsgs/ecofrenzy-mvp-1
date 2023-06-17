@@ -1,0 +1,58 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  Lambda Function for generating challenges with GPT-3.5
+
+Resources:
+  ChallengeGenerationFunctionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: ChallengeGenerationFunctionRole
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Policies:
+        - PolicyName: LambdaExecution
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - "logs:CreateLogGroup"
+                  - "logs:CreateLogStream"
+                  - "logs:PutLogEvents"
+                Resource: "arn:aws:logs:*:*:*"
+        - PolicyName: SSMParameterAccess
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - "ssm:PutParameter"
+                Resource:
+                  - !Sub "arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/*"
+
+  ChallengeGenerationFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: ChallengeGenerationFunction
+      CodeUri: src/
+      Handler: challenge_generation.lambda_handler
+      Runtime: python3.10
+      MemorySize: 128
+      Timeout: 300
+      Role: !GetAtt ChallengeGenerationFunctionRole.Arn
+      Environment:
+        Variables:
+          OPENAI_API_KEY: '{{resolve:ssm:openai_api_key}}'
+
+Outputs:
+  ChallengeGenerationFunctionArn:
+    Description: "Arn of Lambda function for generating challenges"
+    Value: !GetAtt ChallengeGenerationFunction.Arn

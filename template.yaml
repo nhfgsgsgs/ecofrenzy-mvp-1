@@ -9,11 +9,15 @@ Resources:
     Properties:
       Location: notification/template.yaml
         
-        
   Storage:
     Type: AWS::Serverless::Application
     Properties:
       Location: cloudformation/storage.yaml
+
+  ChallengeGeneration:
+    Type: AWS::Serverless::Application
+    Properties:
+      Location: challenge_generation/template.yaml
 
   Api:
     Type: AWS::Serverless::Application
@@ -24,6 +28,7 @@ Resources:
         ImageChallengeNotificationTopic: !GetAtt Storage.Outputs.ImageChallengeNotificationTopic
         SNSCompleteChallengeTopic: !GetAtt Notification.Outputs.SNSCompleteChallengeTopic
         SNSPlatformApplication: !GetAtt Notification.Outputs.SNSPlatformApplication
+        ChallengeGenerationFunctionArn: !GetAtt ChallengeGeneration.Outputs.ChallengeGenerationFunctionArn
 
   Moderation:
     Type: AWS::Serverless::Application
