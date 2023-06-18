@@ -19,27 +19,32 @@ const updateTodayMission = async (event) => {
 
     for (let i = 0; i < storages.length; i++) {
       const storage = storages[i];
-      const storage1 = await Storage.findOneAndUpdate(
-        { _id: storage._id },
-        {
-          $push: {
-            historyMission: {
-              $each: [
-                {
-                  usageDay: users[i].usageDay,
-                  missionPicked: users[i].todayMission.filter(
-                    (mission) => mission.status !== "Start"
-                  )[0]._id || null,
-                  isCompleted: false,
-                  givenMissions: users[i].todayMission,
-                },
-              ],
+      let mission = users[i].todayMission.filter(
+        (mission) => mission.status !== "Start"
+      );
+      let mission_id = null;
+      if (mission.length > 0) {
+        mission_id = mission[0]._id;
+        const storage1 = await Storage.findOneAndUpdate(
+          { _id: storage._id },
+          {
+            $push: {
+              historyMission: {
+                $each: [
+                  {
+                    usageDay: users[i].usageDay,
+                    missionPicked: mission_id,
+                    isCompleted: false,
+                    givenMissions: users[i].todayMission,
+                  },
+                ],
+              },
             },
           },
-        },
-        { new: true }
-      );
-      console.log(storage1);
+          { new: true }
+        );
+        console.log(storage1);
+      }
     }
 
     // Replace todayMission with nextMission
@@ -63,6 +68,6 @@ const updateTodayMission = async (event) => {
   }
 };
 
-module.exports = updateTodayMission;
+// module.exports = updateTodayMission;
 
 exports.handler = updateTodayMission;

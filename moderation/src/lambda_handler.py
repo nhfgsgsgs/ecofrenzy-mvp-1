@@ -143,8 +143,9 @@ def lambda_handler(event, context):
     else:
         # Notify user that image isnot verified relation to the challenge.And user should reupload the image
         print("Image is not verified. Reupload is required!")
-        sns_client.publish(
+        response = sns_client.publish(
             Message="Image is not verified. You should take another photo!",
             MessageStructure="string",
             TargetArn=endpointArn,
         )
+        print("Sent message:", response["MessageId"])

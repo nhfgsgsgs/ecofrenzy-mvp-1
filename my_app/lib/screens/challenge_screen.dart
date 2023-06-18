@@ -11,6 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
 import '../providers/challenge_notifier.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 class ChallengeScreen extends StatefulWidget {
   const ChallengeScreen({Key? key}) : super(key: key);
@@ -23,6 +24,12 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
   final ChallengeService challengeService = ChallengeService();
   late Future<List<Challenge>> futureChallenges;
   FirebaseMessaging messaging = FirebaseMessaging.instance;
+  Future<void> showLoading() {
+    return EasyLoading.show(
+      status: 'loading...',
+      maskType: EasyLoadingMaskType.black,
+    );
+  }
 
   @override
   void initState() {
@@ -30,10 +37,30 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
     futureChallenges = challengeService.fetchChallenges();
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       // When a new message arrives, fetch the challenges again
+      EasyLoading.dismiss();
+      print(message.data['default']);
+
       context.read<ChallengeModel>().fetchChallenges();
-      setState(() {
-        futureChallenges = challengeService.fetchChallenges();
-      });
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('${message.data['default']}'),
+            content: Text('You have a new message: ${message.data['default']}'),
+            actions: [
+              TextButton(
+                child: Text('OK'),
+                onPressed: () {
+                  setState(() {
+                    futureChallenges = challengeService.fetchChallenges();
+                  });
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
     });
   }
 
@@ -61,6 +88,7 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
     request.fields['deviceToken'] = await messaging.getToken() ?? '';
 
     var response = await request.send();
+    showLoading();
     setState(() {
       futureChallenges = challengeService.fetchChallenges();
     });
@@ -71,6 +99,16 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
     response.stream.transform(utf8.decoder).listen((value) {
       print(value);
     });
+  }
+
+  Future<bool> isAllPicked(Future<List<Challenge>> futureChallenges) async {
+    List<Challenge> challenges = await futureChallenges;
+    for (var challenge in challenges) {
+      if (challenge.status == 'pending') {
+        return true;
+      }
+    }
+    return false;
   }
 
   @override
@@ -136,6 +174,23 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
       // bottomNavigationBar: _buildBottomNavigationBarTest(),
       bottomNavigationBar: _buildBottomNavigationBar(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      // floatingActionButton: FutureBuilder<bool>(
+      //     future: isAllPicked(futureChallenges),
+      //     builder: (context, snapshot) {
+      //       if (snapshot.connectionState == ConnectionState.waiting) {
+      //         return const CircularProgressIndicator(); // show a loading spinner while waiting
+      //       } else {
+      //         return FloatingActionButton(
+      //           shape: RoundedRectangleBorder(
+      //             borderRadius: BorderRadius.circular(10),
+      //           ),
+      //           elevation: 0,
+      //           backgroundColor: Colors.blueAccent,
+      //           onPressed: uploadImage,
+      //           child: snapshot.data! ? null : const Icon(Icons.camera_alt),
+      //         );
+      //       }
+      //     }),
       floatingActionButton: FloatingActionButton(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
@@ -143,7 +198,7 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
         elevation: 0,
         backgroundColor: Colors.blueAccent,
         onPressed: uploadImage,
-        child: const Icon(Icons.add),
+        child: const Icon(Icons.camera_alt),
       ),
     );
   }
@@ -318,7 +373,7 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
         // tileColor: getColor(challenge.category), // set background color here
         title: Text(challenge.name,
             style: const TextStyle(fontSize: 20, color: Colors.white)),
-        subtitle: Text(challenge.description,
+        subtitle: Text(challenge.impact,
             style: const TextStyle(
                 color: Colors.white, fontFamily: "Ridley Grotesk")),
         trailing: challenge.isDone

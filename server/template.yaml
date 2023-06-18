@@ -68,21 +68,33 @@ Resources:
                 - !Ref SNSCompleteChallengeTopic
                 - !Ref SNSPlatformApplication
 
-  ExpressFunctionChallenge:
+        - PolicyName: ExpressFunctionLambdaInvokePolicy
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action: lambda:InvokeFunction
+                Resource: !Ref ChallengeGenerationFunctionArn
+
+
+  ExpressFunctionResetChallenge:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: ../server/
-      Handler: challenge.handler
+      CodeUri: ./
+      Handler: challengeReset.handler
       Runtime: nodejs14.x
       MemorySize: 512
       Role: !GetAtt ExpressFunctionRole.Arn
+      Environment:
+        Variables:
+          CHALLENGE_GENERATION_FUNCTION_ARN: !Ref ChallengeGenerationFunctionArn
       Events:
         ExpressFunctionProxy:
           Type: Api
           Properties:
             RestApiId: !Ref ExpressApi
             Path: "/challenge"
-            Method: ANY
+            Method: GET
       
 
   ExpressFunction:
@@ -106,11 +118,12 @@ Resources:
           IMAGE_CHALLENGE_NOTIFICATION_TOPIC: !Ref ImageChallengeNotificationTopic
           SNS_COMPLETE_CHALLENGE_TOPIC: !Ref SNSCompleteChallengeTopic
           SNS_PLATFORM_APPLICATION: !Ref SNSPlatformApplication
+          CHALLENGE_GENERATION_FUNCTION_ARN: !Ref ChallengeGenerationFunctionArn
 
   ExpressEventBridge:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: ../server/
+      CodeUri: ./
       Handler: challengeUpdate.handler
       Runtime: nodejs14.x
       MemorySize: 512
@@ -118,7 +131,7 @@ Resources:
   ExpressEventBridgeGenerateChallenge:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: ../server/
+      CodeUri: ./
       Handler: challengeGenerate.handler
       Runtime: nodejs14.x
       MemorySize: 512
@@ -157,12 +170,23 @@ Resources:
       SourceArn: !GetAtt ExpressEventRule.Arn
 
   PermissionForEventsToInvokeLambdaGenerateChallenge:
-    Type: AWS::Lambda::Permission
+    Type: "AWS::Lambda::Permission"
     Properties:
       FunctionName: !GetAtt ExpressEventBridgeGenerateChallenge.Arn
       Action: lambda:InvokeFunction
-      Principal: events.amazonaws.com
+      Principal: "events.amazonaws.com"
       SourceArn: !GetAtt ExpressEventRuleGenerateChallenge.Arn
+
+
+
+  PermissionForLambdaToInvokeLambda:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !GetAtt ExpressFunctionResetChallenge.Arn
+      Action: lambda:InvokeFunction
+      Principal: lambda.amazonaws.com
+      SourceArn: !Ref ChallengeGenerationFunctionArn
+
 
 Outputs:
   ExpressApiEndpoint:
