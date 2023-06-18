@@ -5,6 +5,8 @@ import 'firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 import 'package:my_app/screens/challenge_screen.dart';
+import 'package:my_app/screens/camera.dart';
+
 // import challenge service
 import 'service/challenge_service.dart';
 import 'package:provider/provider.dart';

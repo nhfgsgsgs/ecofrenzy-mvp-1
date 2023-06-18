@@ -84,10 +84,49 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            // white container with shadow
-            padding: const EdgeInsets.only(left: 15, right: 15, top: 12.5),
+            height: 56,
+            width: 382,
+            padding: const EdgeInsets.only(top: 12.5),
+            margin: EdgeInsets.only(left: 16, right: 16),
             decoration: const BoxDecoration(
-              color: Colors.white,
+              color: Colors.red,
+            ),
+            child: Stack(
+              children: [
+                Container(
+                  height: 41,
+                  width: 382,
+                   decoration:  BoxDecoration (
+                    color:  Color(0x42ffffff),
+                    borderRadius:  BorderRadius.circular(20),
+                    boxShadow:  [
+                      BoxShadow(
+                        color:  Color(0x19000000),
+                        offset:  Offset(0, 0),
+                        blurRadius:  0,
+                      ),
+                      BoxShadow(
+                        color:  Color(0x19000000),
+                        offset:  Offset(0, 2),
+                        blurRadius:  1.5,
+                      ),
+                      BoxShadow(
+                        color:  Color(0x16000000),
+                        offset:  Offset(0, 6),
+                        blurRadius:  3,
+                      ),
+                    ],
+                  ),
+
+                ),
+              ],
+            ),           
+          ),
+          Container(
+            alignment: Alignment.center,
+            padding: const EdgeInsets.only(left: 15, right: 15, top: 0),
+            decoration: const BoxDecoration(
+              color: Colors.blue,
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
