@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:my_app/models/challenge.dart';
 import 'package:my_app/service/challenge_service.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
@@ -119,16 +120,16 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
       )),
       // bottomNavigationBar: _buildBottomNavigationBarTest(),
       bottomNavigationBar: _buildBottomNavigationBar(),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: FloatingActionButton(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
-        elevation: 0,
-        backgroundColor: Colors.blueAccent,
-        onPressed: uploadImage,
-        child: const Icon(Icons.add),
-      ),
+      // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      // floatingActionButton: FloatingActionButton(
+      //   shape: RoundedRectangleBorder(
+      //     borderRadius: BorderRadius.circular(10),
+      //   ),
+      //   elevation: 0,
+      //   backgroundColor: Colors.blueAccent,
+      //   onPressed: uploadImage,
+      //   child: const Icon(Icons.add),
+      // ),
     );
   }
 
@@ -141,9 +142,9 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.2),
-            spreadRadius: 5,
-            blurRadius: 10,
+            color: Colors.grey.withOpacity(0.5),
+            spreadRadius: 10,
+            blurRadius: 15,
           ),
         ],
       ),
@@ -156,23 +157,37 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
           backgroundColor: Colors.white,
           showSelectedLabels: false,
           showUnselectedLabels: false,
-          selectedItemColor: Colors.redAccent,
-          unselectedItemColor: Colors.grey.withOpacity(0.5),
+          selectedItemColor: Color(0xFF46E091),
+          unselectedItemColor: Colors.black,
           items: const [
+            BottomNavigationBarItem(
+              label: 'Achievements',
+              icon: Icon(
+                FontAwesomeIcons.book,
+                size: 30,
+              ),
+            ),
             BottomNavigationBarItem(
               label: 'Challenges',
               icon: Icon(
-                Icons.list,
+                FontAwesomeIcons.compass,
                 size: 30,
               ),
             ),
             BottomNavigationBarItem(
               label: 'Achievements',
               icon: Icon(
-                Icons.emoji_events,
+                FontAwesomeIcons.ticketAlt,
                 size: 30,
               ),
-            )
+            ),
+            BottomNavigationBarItem(
+              label: 'Challenges',
+              icon: Icon(
+                FontAwesomeIcons.trophy,
+                size: 30,
+              ),
+            ),
           ],
         ),
       ),
@@ -181,31 +196,58 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
 
   AppBar _buildAppBar() {
     return AppBar(
-      backgroundColor: Colors.white,
-      elevation: 0,
-      title: Row(
+      titleSpacing: 0,
+      backgroundColor: Color(0xFF46E091),
+      title: Stack(
         children: [
           Container(
-            height: 45,
-            width: 45,
-            margin: const EdgeInsets.only(left: 5),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: Image.asset(
-                'assets/images/profile.jpg',
-                fit: BoxFit.cover,
+            width: 450,
+            height: 116,
+            decoration: BoxDecoration(
+              color: const Color(0xFF46E091),
+              borderRadius: const BorderRadius.only(
+                bottomLeft: Radius.circular(20),
+                bottomRight: Radius.circular(20),
               ),
             ),
           ),
-          const SizedBox(width: 10),
-          const Text(
-            'Hi, Luong!',
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 26,
-              fontWeight: FontWeight.bold,
+          Positioned(
+            top: 50,
+            left: 95,
+            child: Align(
+                child: Text(
+              "Today Challenges",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontFamily: "Ridley Grotesk",
+                fontWeight: FontWeight.bold,
+                fontSize: 24,
+              ),
+            )),
+          ),
+          Positioned(
+              top: 50,
+              left: 10,
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.pushNamed(context, '/addfriend');
+                },
+                child: Icon(Icons.people, size: 30, color: Colors.black,),
+              )),
+          Positioned(
+            top: 46,
+            left: 360,
+            child: GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(context, '/profile');
+              },
+              child: Image.asset(
+                'assets/images/avatar.png',
+                width: 45,
+                height: 45,
+              ),
             ),
-          )
+          ),
         ],
       ),
     );
@@ -216,11 +258,8 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
     final listProps = [
       {
         "category": "Energy and Resources",
-        "color": [
-          "#000000",
-          "#000001",
-        ],
-        "icon": "assets/images/consumption.png",
+        "color": ["#E52BDD", "#FF51CE", "#FB8DF0"],
+        "icon": "assets/images/Energy and Resources.png",
       },
       {
         "category": "Transportation",
@@ -243,19 +282,13 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
       },
       {
         "category": "Forestry",
-        "color": [
-          "#000000",
-          "#000001",
-        ],
-        "icon": "assets/images/consumption.png",
+        "color": ["#08BB70", "#1AE16A", "#65EDA4"],
+        "icon": "assets/images/forestry.png",
       },
       {
         "category": "Awareness and Innovation",
-        "color": [
-          "#000000",
-          "#000001",
-        ],
-        "icon": "assets/images/consumption.png",
+        "color": ["#196AE3", "#2094E8", "#71CCFF"],
+        "icon": "assets/images/Awareness and Innovation.png",
       }
     ];
 
@@ -289,7 +322,8 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
         Container(
           height: 148,
           width: 382,
-          padding: const EdgeInsets.only(left: 10, top: 15, right: 5, bottom: 5),
+          padding:
+              const EdgeInsets.only(left: 10, top: 15, right: 5, bottom: 5),
           margin: const EdgeInsets.only(top: 35),
           decoration: BoxDecoration(
             gradient: LinearGradient(
@@ -392,7 +426,7 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
                     ),
                   )
                 ],
-              ),             
+              ),
             ],
           ),
         ),
