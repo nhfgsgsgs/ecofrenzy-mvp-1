@@ -135,11 +135,11 @@ Based on the analysis, you develop the growth plan for the user to help them to 
 Based on this growth plan you develop for the user:
 {{analysis_growth_plan}}
 
-You summarize the general growth plan for the user (3 bullet points, each start with a verb. The output must have the format as the given bellow example:
+You summarize the general growth plan for the user (3 bullet points, each start with a verb. The output must have the format as the given below format(you should fill in each quotation marks):
 [
-    "bullet point 0",
-    "bullet point 1",
-    "bullet point 2"
+    " ",
+    " ",
+    " "
 ]
 {{~/user}}
 {{#assistant~}}
@@ -157,7 +157,7 @@ A challenge should have the following attributes:
 - Level: Determined by whether the challenges take that many activities to complete, can be [Easy, Intermediate, Hard]
 - Creativity: Determined by whether the challenge shown describes direct relation to sustainability or indirect, can be [Direct, Indirect] (indirect means the activity doesn’t sound related to sustainability but actually contributes to sustainability). For example: “Bring Your Own Bag” - Direct Relation to Sustainability, “Go Grocery Shopping for 05 Days Use” - Indirect Relation to Sustainability)
 - Verification: The verification yes/no questions for the image verification system is to verify whether the picture the user takes is aligned with the challenge, and the Desired answer is the true answer for the question. (For example: “Does this picture show a person with a bag that is not plastic?” desired answer: yes)
-
+Note that Generated challenges should be picked from different cetegories and completely different from each other.
 You must return 3 challenges, each challenge has the following json format (no words needed outside the blankets):
 {
     "name": Name,
@@ -173,6 +173,44 @@ You must return 3 challenges, each challenge has the following json format (no w
 {{#assistant~}}
 {{gen 'challenge' temperature=1}}
 {{~/assistant}}
+
+{{#block hidden=True}}
+{{#user~}}
+Please re-exammine the format of 3 challenges you return above. They should be exatly like the following array format (no words needed outside the array):
+[
+    {
+    "name": Name,
+    "category": Category ,
+    "description": Descriptions ,
+    "impact": Impact ,
+    "level": Level ,
+    "creativity": Creativity,
+    "verification": [list of dictionaries, each dictionary has the following format: {"question": Question, "desired_answer": Desired answer}]
+},
+{
+    "name": Name,
+    "category": Category,
+    "description": Descriptions,
+    "impact": Impact 2,
+    "level": Level,
+    "creativity": Creativity,
+    "verification": [list of dictionaries, each dictionary has the following format: {"question": Question, "desired_answer": Desired answer}]
+},
+{
+    "name": Name,
+    "category": Category,
+    "description": Descriptions,
+    "impact": Impact 11,
+    "level": Level,
+    "creativity": Creativity,
+    "verification": [list of dictionaries, each dictionary has the following format: {"question": Question, "desired_answer": Desired answer}]
+}
+]
+{{~/user}}
+{{#assistant~}}
+{{gen 'challenge_json' temperature=0}}
+{{~/assistant}}
+{{/block}}
 """
 )
 
@@ -227,7 +265,10 @@ def lambda_handler(event, context):
     print(growth_plan)
     print("\n")
 
-    growth_plan = str2lst(growth_plan)
+    try : 
+        growth_plan = str2lst(growth_plan)
+    except Exception as e:
+        pass
 
     challenges = transform_challenge.run(challenge_str)
 
