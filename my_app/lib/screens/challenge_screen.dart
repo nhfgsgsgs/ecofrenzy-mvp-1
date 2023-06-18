@@ -85,7 +85,7 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
           Container(
             // white container with shadow
             padding: const EdgeInsets.only(left: 15, right: 15, top: 12.5),
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               color: Colors.white,
             ),
             child: Column(
@@ -97,6 +97,7 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Center(child: CircularProgressIndicator());
                     } else if (snapshot.hasError) {
+                      print(snapshot.error);
                       return const Text('Error loading challenges');
                     } else {
                       return ListView.builder(
@@ -219,7 +220,7 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
           "#000000",
           "#000001",
         ],
-        "icon": "assets/images/.png",
+        "icon": "assets/images/consumption.png",
       },
       {
         "category": "Transportation",
@@ -238,7 +239,7 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
       {
         "category": "Waste management",
         "color": ["#D92849", "#D43653", "#FFC71F"],
-        "icon": "assets/images/waste management.png",
+        "icon": "assets/images/waste_management.png",
       },
       {
         "category": "Forestry",
@@ -246,7 +247,7 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
           "#000000",
           "#000001",
         ],
-        "icon": "assets/images/.png",
+        "icon": "assets/images/consumption.png",
       },
       {
         "category": "Awareness and Innovation",
@@ -254,7 +255,7 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
           "#000000",
           "#000001",
         ],
-        "icon": "assets/images/.png",
+        "icon": "assets/images/consumption.png",
       }
     ];
 
@@ -280,135 +281,137 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
           return listProps[i]["icon"] as String;
         }
       }
-      return "assets/images/.png"; // default icon
+      return "assets/images/consumption.png"; // default icon
     }
 
     return Container(
-        height: 143,
-        width: 362,
-        padding: const EdgeInsets.only(left: 10, top: 15, right: 5, bottom: 5),
-        margin: const EdgeInsets.only(top: 32),
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: getGradientColor(challenge.category).sublist(0, 2),
-            begin: Alignment.centerLeft,
-            end: Alignment.centerRight,
-          ),
-          borderRadius: BorderRadius.circular(15),
-          boxShadow: [
-            BoxShadow(
-              color: Color(0x19000000),
-              blurRadius: 0,
-              offset: Offset(0, 0),
-            ),
-            BoxShadow(
-              color: Color(0x19000000),
-              blurRadius: 4,
-              offset: Offset(0, 2),
-            ),
-            BoxShadow(
-              color: Color(0x16000000),
-              blurRadius: 8,
-              offset: Offset(0, 8),
-            ),
-            BoxShadow(
-              color: Color(0x0c000000),
-              blurRadius: 11,
-              offset: Offset(0, 18),
-            ),
-            BoxShadow(
-              color: Color(0x02000000),
-              blurRadius: 13,
-              offset: Offset(0, 33),
-            ),
-            BoxShadow(
-              color: Color(0x00000000),
-              blurRadius: 14,
-              offset: Offset(0, 51),
-            ),
-          ],
+      height: 143,
+      width: 362,
+      padding: const EdgeInsets.only(left: 10, top: 15, right: 5, bottom: 5),
+      margin: const EdgeInsets.only(top: 32),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: getGradientColor(challenge.category).sublist(0, 2),
+          begin: Alignment.centerLeft,
+          end: Alignment.centerRight,
         ),
-        child: Stack(
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  margin: EdgeInsets.fromLTRB(5, 0, 5, 20),
-                  height: 60,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        width: 60,
-                        height: 60,
-                        margin: const EdgeInsets.only(right: 10),
-                        padding: EdgeInsets.all(5),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(50),
-                          color: Colors.white,
-                        ),
-                        child: Center(
-                          child: SizedBox(
-                            width: 47,
-                            height: 47,
-                            child: Image.asset(
-                              getIcon(challenge.category),
-                              fit: BoxFit.cover,
-                            ),
+        borderRadius: BorderRadius.circular(15),
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0x19000000),
+            blurRadius: 0,
+            offset: Offset(0, 0),
+          ),
+          BoxShadow(
+            color: Color(0x19000000),
+            blurRadius: 4,
+            offset: Offset(0, 2),
+          ),
+          BoxShadow(
+            color: Color(0x16000000),
+            blurRadius: 8,
+            offset: Offset(0, 8),
+          ),
+          BoxShadow(
+            color: Color(0x0c000000),
+            blurRadius: 11,
+            offset: Offset(0, 18),
+          ),
+          BoxShadow(
+            color: Color(0x02000000),
+            blurRadius: 13,
+            offset: Offset(0, 33),
+          ),
+          BoxShadow(
+            color: Color(0x00000000),
+            blurRadius: 14,
+            offset: Offset(0, 51),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                margin: const EdgeInsets.fromLTRB(5, 0, 5, 20),
+                height: 60,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      width: 60,
+                      height: 60,
+                      margin: const EdgeInsets.only(right: 10),
+                      padding: const EdgeInsets.all(5),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(50),
+                        color: Colors.white,
+                      ),
+                      child: Center(
+                        child: SizedBox(
+                          width: 47,
+                          height: 47,
+                          child: Image.asset(
+                            getIcon(challenge.category),
+                            fit: BoxFit.cover,
                           ),
                         ),
                       ),
-                      Container(
-                        margin: EdgeInsets.only(top: 5, bottom: 5),
-                        child: Stack(
-                          children: [
-                            Positioned(
-                              left: 0,
-                              top: 0,
-                              child: Text(challenge.name,
-                                  style: const TextStyle(
-                                      fontSize: 20,
-                                      color: Colors.white,
-                                      fontFamily: "Ridley Grotesk",
-                                      fontWeight: FontWeight.bold)),
-                            ),
-                            Positioned(
-                                left: 0,
-                                top: 10,
-                                child: Text(challenge.caption,
-                                    style: const TextStyle(
-                                        fontSize: 13,
-                                        color: Colors.white,
-                                        fontFamily: "Ridley Grotesk"))),
-                          ],
-                        ),
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            challenge.name,
+                            style: const TextStyle(
+                                fontSize: 20,
+                                color: Colors.white,
+                                fontFamily: "Ridley Grotesk",
+                                fontWeight: FontWeight.bold),
+                          ),
+                          Text(
+                            challenge.category,
+                            style: const TextStyle(
+                                fontSize: 13,
+                                color: Colors.white,
+                                fontFamily: "Ridley Grotesk"),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                )
-              ],
-            ),
-            Container(
-              decoration: BoxDecoration(
-                color: getGradientColor(challenge.category).last,
-                borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(15),
-                    bottomRight: Radius.circular(15)),
-              ),
-              child: Container(
-                child: Text(
-                  "View More >>>",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.white,
-                      fontFamily: "Ridley Grotesk",
-                      fontWeight: FontWeight.bold),
+                    ),
+                  ],
                 ),
+              )
+            ],
+          ),
+          Container(
+            decoration: BoxDecoration(
+              color: getGradientColor(challenge.category).last,
+              borderRadius: const BorderRadius.only(
+                bottomLeft: Radius.circular(15),
+                bottomRight: Radius.circular(15),
               ),
-            )
-          ],
-        ));
+            ),
+            child: const Text(
+              "View More >>>",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 12,
+                color: Colors.white,
+                fontFamily: "Ridley Grotesk",
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          )
+        ],
+      ),
+    );
   }
 }
