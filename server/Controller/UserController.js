@@ -16,7 +16,7 @@ const UserController = {
       console.log(user);
       if (user) {
         const missions = user?.todayMission?.filter((mission) => {
-          return mission.status != "Start";
+          return mission.isDone == false && mission.status != "Start";
         });
 
         if (missions.length == 1 && missions[0]._id == missionId) {
@@ -24,6 +24,9 @@ const UserController = {
           switch (mission.status) {
             case "Start":
               mission.status = "Picked";
+              break;
+            case "Picked":
+              mission.status = "Pending";
               break;
             case "Pending":
               mission.status = "Done";
@@ -43,6 +46,9 @@ const UserController = {
           switch (mission.status) {
             case "Start":
               mission.status = "Picked";
+              break;
+            case "Picked":
+              mission.status = "Pending";
               break;
             case "Pending":
               mission.status = "Done";
@@ -89,9 +95,29 @@ const UserController = {
 
   createUser: async (req, res) => {
     try {
-      const user = await User.create({
-        todayMission: await Mission.aggregate([
-          { $sample: { size: 3 } },
+      function shuffle(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+      }
+
+      const categories = [
+        "Energy and Resources",
+        "Transportation",
+        "Consumption",
+        "Waste management",
+      ];
+
+      const randomCategories = shuffle(categories).slice(0, 3);
+
+      const randomMissions = [];
+
+      for (let i = 0; i < randomCategories.length; i++) {
+        const mission = await Mission.aggregate([
+          { $match: { category: randomCategories[i] } },
+          { $sample: { size: 1 } },
           {
             $project: {
               _id: 1,
@@ -110,13 +136,14 @@ const UserController = {
               isDone: false,
               status: "Start",
               url: "",
-              nextMission: [],
-              age: 21,
-              gender: "Male",
-              location: "Urban",
             },
           },
-        ]),
+        ]);
+
+        randomMissions.push(mission[0]);
+      }
+      const user = await User.create({
+        todayMission: randomMissions,
       });
       const storage = await Storage.create({
         user: user._id,

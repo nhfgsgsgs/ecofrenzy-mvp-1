@@ -4,14 +4,17 @@ const userSchema = new mongoose.Schema(
   {
     age: {
       type: Number,
+      default: 21,
     },
     gender: {
       type: String,
       enum: ["Male", "Female", "Other"],
+      default: "Male",
     },
     location: {
       type: String,
       enum: ["Urban", "Suburban", "Rural"],
+      default: "Urban",
     },
     usageDay: {
       type: Number,
@@ -24,7 +27,7 @@ const userSchema = new mongoose.Schema(
         },
         name: {
           type: String,
-          required: true,
+          // required: true,
         },
         point: {
           type: Number,
@@ -83,7 +86,7 @@ const userSchema = new mongoose.Schema(
         },
         name: {
           type: String,
-          required: true,
+          // required: true,
         },
         point: {
           type: Number,
@@ -131,6 +134,7 @@ const userSchema = new mongoose.Schema(
           default: false,
         },
       },
+      // default: [],
     ],
     preferences: [
       {

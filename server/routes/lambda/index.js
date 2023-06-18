@@ -76,7 +76,9 @@ const generateChallenges = async (user, storage) => {
   });
 
   const params = {
-    FunctionName: process.env.CHALLENGE_GENERATION_FUNCTION_ARN,
+    // FunctionName: process.env.CHALLENGE_GENERATION_FUNCTION_ARN,
+    FunctionName:
+      "arn:aws:lambda:ap-southeast-1:885537931206:function:ChallengeGenerationFunction",
     InvocationType: "RequestResponse",
     Payload: JSON.stringify({
       user_data: user,
@@ -115,7 +117,7 @@ lambdaRouter.get("/challenge", async (req, res) => {
         },
         { new: true }
       );
-      console.log(user1);
+      console.log({ user1 });
     }
 
     for (let i = 0; i < storages.length; i++) {
@@ -144,7 +146,7 @@ lambdaRouter.get("/challenge", async (req, res) => {
           },
           { new: true }
         );
-        console.log(storage1);
+        console.log({ storage1 });
       }
     }
 

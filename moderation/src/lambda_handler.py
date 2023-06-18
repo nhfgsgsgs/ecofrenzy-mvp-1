@@ -123,13 +123,14 @@ def lambda_handler(event, context):
 
         if response.status_code == 200:
             print("Successfully updated mission status via API")
+            print(response.json())
         else:
             print(
                 "Failed to update mission status via API. Response code:",
                 response.status_code,
             )
 
-        response = sns_client.publish(
+        response1 = sns_client.publish(
             Message="Image is verified. Challenge completed!",
             MessageStructure="string",
             TargetArn=endpointArn,
@@ -138,7 +139,7 @@ def lambda_handler(event, context):
         # In thông tin message đã gửi
         # print("Sent message:", response[""])
         # print message sns đã gửi
-        print("Sent message:", response["MessageId"])
+        print("Sent message:", response1["MessageId"])
 
     else:
         # Notify user that image isnot verified relation to the challenge.And user should reupload the image

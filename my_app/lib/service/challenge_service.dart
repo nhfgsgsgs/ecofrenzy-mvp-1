@@ -46,7 +46,8 @@ class ChallengeService {
     print(userId!);
     final response = await http.put(
       Uri.parse(
-          'https://ea9pgpvvaa.execute-api.ap-southeast-1.amazonaws.com/prod/api/user/updateToday'),
+          // 'https://ea9pgpvvaa.execute-api.ap-southeast-1.amazonaws.com/prod/api/user/updateToday'
+          'http://192.168.54.105:3000/api/user/updateToday'),
       headers: <String, String>{
         'Accept': 'application/json',
       },
@@ -55,6 +56,7 @@ class ChallengeService {
         'missionId': id,
       },
     );
+    print(response.body);
     return response.body;
   }
 }

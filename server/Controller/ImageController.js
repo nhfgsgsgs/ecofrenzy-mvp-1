@@ -13,8 +13,24 @@ module.exports.upload = async (req, res, next) => {
     const user_id = req.params.id;
     const result = await s3Uploadv3(file, user_id);
     const user = await User.findById(user_id);
-    const updateUser = await User.updateOne(
-      { _id: user_id, "todayMission.status": { $in: ["Picked", "Pending"] } },
+    // const updateUser = await User.updateOne(
+    //   { _id: user_id, "todayMission.status": { $in: ["Picked", "Pending"] } },
+    //   {
+    //     $set: {
+    //       "todayMission.$.url": result?.Location,
+    //       "todayMission.$.status": "Pending",
+    //     },
+    //   },
+    //   { new: true }
+    // );
+    // user.todayMission.forEach((mission) => {
+    //   if (mission.status == "Picked" || mission.status == "Pending") {
+    //     mission.url = result?.Location;
+    //     mission.status = "Pending";
+    //   }
+    // });
+    const user1 = await user.findByIdAndUpdate(
+      user_id,
       {
         $set: {
           "todayMission.$.url": result?.Location,
@@ -24,6 +40,7 @@ module.exports.upload = async (req, res, next) => {
       { new: true }
     );
     console.log(result);
+    console.log(user1);
     const mission = user?.todayMission?.filter((mission) => {
       return mission.status == "Picked" || mission.status == "Pending";
     })[0];

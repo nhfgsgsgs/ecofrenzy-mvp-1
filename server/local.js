@@ -40,14 +40,6 @@ app.use((error, req, res, next) => {
     }
   }
 });
-
-app.get("/", (req, res) => {
-  return res.status(200).json({
-    success: true,
-    data: "Hello World",
-  });
-});
-
 mongoose
   .connect(process.env.MONGO_URL)
   .then(() => {
@@ -57,5 +49,16 @@ mongoose
   .catch((err) => {
     console.log(err);
   });
+
+const Mission = require("./Models/Mission");
+
+app.get("/", async (req, res) => {
+  const mission = await Mission.find();
+  return res.status(200).json({
+    success: true,
+    data: "Hello World",
+    mission,
+  });
+});
 
 console.log(`listening on http://localhost:${port}`);
