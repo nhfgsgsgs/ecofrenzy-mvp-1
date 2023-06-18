@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:my_app/app/app.router.dart';
 import 'package:my_app/screens/challenge/challenge_view.dart';
+import 'package:my_app/screens/feed/feed_view.dart';
+import 'package:my_app/screens/leaderboard/leaderboard_view.dart';
 import 'package:my_app/screens/profile/profile_view.dart';
 import 'package:stacked/stacked.dart';
 
@@ -15,9 +18,22 @@ class HomeView extends StackedView<HomeViewModel> {
     Widget? child,
   ) {
     return Scaffold(
-        body: getViewForIndex(viewModel.currentIndex),
-        appBar: _buildAppBar(),
-        bottomNavigationBar: _buildBottomNavigationBar(viewModel));
+      body: getViewForIndex(viewModel.currentIndex),
+      appBar: _buildAppBar(),
+      bottomNavigationBar: _buildBottomNavigationBar(viewModel),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: FloatingActionButton(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        elevation: 0,
+        backgroundColor: Colors.blueAccent,
+        // use Routes.imagePickerViewRoute
+        onPressed: () =>
+            Navigator.of(context).pushNamed(Routes.imagePickerView),
+        child: const Icon(Icons.camera_alt),
+      ),
+    );
   }
 
   AppBar _buildAppBar() {
@@ -97,9 +113,16 @@ class HomeView extends StackedView<HomeViewModel> {
               ),
             ),
             BottomNavigationBarItem(
-              label: 'Profile',
+              label: 'Leaderboard',
               icon: Icon(
                 Icons.emoji_events,
+                size: 30,
+              ),
+            ),
+            BottomNavigationBarItem(
+              label: 'Profile',
+              icon: Icon(
+                Icons.person,
                 size: 30,
               ),
             )
@@ -120,6 +143,10 @@ class HomeView extends StackedView<HomeViewModel> {
       case 0:
         return ChallengeView();
       case 1:
+        return LeaderBoardView();
+      case 2:
+        return FeedView();
+      case 3:
         return ProfileView();
       default:
         return ChallengeView();

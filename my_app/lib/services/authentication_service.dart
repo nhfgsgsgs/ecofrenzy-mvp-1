@@ -24,9 +24,9 @@ class AuthenticationService {
       final Map<String, dynamic> body = jsonDecode(response.body);
       final user = body['user'];
       prefs.setString('id', user['_id']);
-    }
 
-    print('User logged in');
+      print(user);
+    }
   }
 
   Future<bool> isUserLoggedIn() async {

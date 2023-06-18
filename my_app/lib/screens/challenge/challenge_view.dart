@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_app/models/challenge.dart';
 import 'package:stacked/stacked.dart';
 
 import 'challenge_viewmodel.dart';
@@ -38,9 +39,21 @@ class ChallengeView extends StatelessWidget {
           child: SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: model.challenges.map((challenge) {
-                return ExpandableCard(challenge: challenge, model: model);
-              }).toList(),
+              children: model.challenges.map(
+                (challenge) {
+                  return Opacity(
+                    opacity: model.hasPickedChallenge &&
+                            challenge.status != ChallengeStatus.picked
+                        ? 0.5
+                        : 1.0,
+                    child: IgnorePointer(
+                      ignoring: model.hasPickedChallenge &&
+                          challenge.status != ChallengeStatus.picked,
+                      child: ExpandableCard(challenge: challenge, model: model),
+                    ),
+                  );
+                },
+              ).toList(),
             ),
           ),
         );

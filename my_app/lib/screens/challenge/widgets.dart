@@ -357,29 +357,31 @@ class ChallengeBigCard extends ChallengeSmallCard {
               // Accept Challenge Button
               Padding(
                 padding: const EdgeInsets.all(10.0),
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor:
-                        getGradientColor(challenge.category.name).last,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
-                  ),
-                  onPressed: () {
-                    model.updateChallengeStatus(challenge.id);
-                    Navigator.pop(context);
-                  },
-                  child: const Text(
-                    'Accept Challenge',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontFamily: "Ridley Grotesk",
-                      color: Colors.white,
-                      decoration: TextDecoration.none,
-                    ),
-                  ),
-                ),
+                child: model.hasPickedChallenge
+                    ? const SizedBox()
+                    : ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor:
+                              getGradientColor(challenge.category.name).last,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                        ),
+                        onPressed: () {
+                          model.updateChallengeStatus(challenge.id);
+                          Navigator.pop(context);
+                        },
+                        child: const Text(
+                          'Accept Challenge',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontFamily: "Ridley Grotesk",
+                            color: Colors.white,
+                            decoration: TextDecoration.none,
+                          ),
+                        ),
+                      ),
               ),
             ],
           ),

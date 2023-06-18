@@ -1,13 +1,16 @@
 import 'package:my_app/app/app.locator.dart';
 import 'package:my_app/models/challenge.dart';
-import 'package:my_app/services/challenge_service.dart';
+import 'package:my_app/services/api_service.dart';
 import 'package:stacked/stacked.dart';
 
 class ChallengeViewModel extends FutureViewModel<List<Challenge>> {
-  final ChallengeService _challengeService = locator<ChallengeService>();
+  final ApiService _challengeService = locator<ApiService>();
 
   List<Challenge> _challenges = [];
   List<Challenge> get challenges => _challenges;
+
+  bool get hasPickedChallenge => _challenges
+      .any((challenge) => challenge.status == ChallengeStatus.picked);
 
   @override
   Future<List<Challenge>> futureToRun() => _fetchChallenges();
