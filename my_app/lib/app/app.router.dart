@@ -108,7 +108,7 @@ class StackedRouter extends _i1.RouterBase {
     },
     _i7.ImagePickerView: (data) {
       return _i9.MaterialPageRoute<dynamic>(
-        builder: (context) => _i7.ImagePickerView(),
+        builder: (context) => const _i7.ImagePickerView(),
         settings: data,
       );
     },

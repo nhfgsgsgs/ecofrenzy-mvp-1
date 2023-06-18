@@ -19,12 +19,16 @@ class ChallengeSmallCard extends StatelessWidget {
   final listProps = [
     {
       "category": "Energy and Resources",
-      "color": ["#FDAD2D", "#FE875C", "#FFC71F"],
-      "icon": "assets/images/consumption.png",
+      "color": ["#E52BDD", "#FF51CE", "#FB8DF0"],
+      "icon": "assets/images/Energy and Resources.png",
     },
     {
       "category": "Transportation",
-      "color": ["#FDAD2D", "#FE875C", "#FFC71F"],
+      "color": [
+        "#7717F3",
+        "#8E37FF",
+        "#BE61F8",
+      ],
       "icon": "assets/images/transportation.png",
     },
     {
@@ -33,19 +37,19 @@ class ChallengeSmallCard extends StatelessWidget {
       "icon": "assets/images/consumption.png",
     },
     {
-      "category": "Waste Management",
+      "category": "Waste management",
       "color": ["#D92849", "#D43653", "#FE4F7A"],
       "icon": "assets/images/waste_management.png",
     },
     {
       "category": "Forestry",
-      "color": ["#FDAD2D", "#FE875C", "#FFC71F"],
-      "icon": "assets/images/consumption.png",
+      "color": ["#08BB70", "#1AE16A", "#65EDA4"],
+      "icon": "assets/images/forestry.png",
     },
     {
       "category": "Awareness and Innovation",
-      "color": ["#FDAD2D", "#FE875C", "#FFC71F"],
-      "icon": "assets/images/consumption.png",
+      "color": ["#196AE3", "#2094E8", "#71CCFF"],
+      "icon": "assets/images/Awareness and Innovation.png",
     }
   ];
 
