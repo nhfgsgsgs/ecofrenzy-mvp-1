@@ -25,6 +25,8 @@ class AuthenticationService {
       final user = body['user'];
       prefs.setString('id', user['_id']);
     }
+
+    print('User logged in');
   }
 
   Future<bool> isUserLoggedIn() async {

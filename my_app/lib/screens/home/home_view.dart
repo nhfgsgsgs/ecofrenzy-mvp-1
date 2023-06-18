@@ -90,6 +90,13 @@ class HomeView extends StackedView<HomeViewModel> {
               ),
             ),
             BottomNavigationBarItem(
+              label: 'Social Feed',
+              icon: Icon(
+                Icons.people,
+                size: 30,
+              ),
+            ),
+            BottomNavigationBarItem(
               label: 'Profile',
               icon: Icon(
                 Icons.emoji_events,
