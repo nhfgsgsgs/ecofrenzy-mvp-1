@@ -62,12 +62,11 @@ const generateChallenges = async (user, storage) => {
     InvocationType: "RequestResponse",
     Payload: JSON.stringify({
       user_data: user,
-      records: last3HistoryMissionWithIndex,
+      records: storage,
     }),
   };
 
   const result = await lambda.invoke(params).promise();
-  console.log(result);
   return JSON.parse(result.Payload);
 };
 
@@ -78,7 +77,7 @@ const getNewChallenges = async (user, storage) => {
   return generateChallenges(user, storage);
 };
 
-const createTodayMission = async (event) => {
+exports.handler = async (event) => {
   try {
     const storages = await Storage.find();
     const users = await User.find();
@@ -100,13 +99,57 @@ const createTodayMission = async (event) => {
       );
       console.log(user1);
     }
+
+    for (let i = 0; i < storages.length; i++) {
+      const storage = storages[i];
+      let mission = users[i].todayMission.filter(
+        (mission) => mission.status !== "Start"
+      );
+      let mission_id = null;
+      if (mission.length > 0) {
+        mission_id = mission[0]._id;
+        const storage1 = await Storage.findOneAndUpdate(
+          { _id: storage._id },
+          {
+            $push: {
+              historyMission: {
+                $each: [
+                  {
+                    usageDay: users[i].usageDay,
+                    missionPicked: mission_id,
+                    isCompleted: false,
+                    givenMissions: users[i].todayMission,
+                  },
+                ],
+              },
+            },
+          },
+          { new: true }
+        );
+        console.log(storage1);
+      }
+    }
+
+    // Replace todayMission with nextMission
+    for (let i = 0; i < users.length; i++) {
+      const user = users[i];
+      const user1 = await User.findOneAndUpdate(
+        { _id: user._id },
+        {
+          $set: {
+            usageDay: user.usageDay + 1,
+            todayMission: user.nextMission,
+          },
+        },
+        { new: true }
+      );
+    }
     console.log("done");
+    return {
+      statusCode: 200,
+      body: JSON.stringify("done"),
+    };
   } catch (error) {
     console.log("An error occurred:", error);
   }
 };
-
-// module.exports = createTodayMission;
-
-exports.handler = createTodayMission;
-// createTodayMission();
