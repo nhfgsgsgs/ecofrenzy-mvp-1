@@ -230,9 +230,6 @@ def str2lst(str):
 
 
 def lambda_handler(event, context):
-    print(event)
-    return
-
     consecutive_errors = 0
     while True:
         try:
@@ -252,13 +249,19 @@ def lambda_handler(event, context):
                 raise Exception("Other error")
 
     challenge_str = output["challenge"]
+    
+    user_data = event["user_data"]
 
     preferences = output["preferences"]
     print("Preferences:")
     print(preferences)
     print("\n")
 
-    preferences = str2lst(preferences)
+    try:
+        preferences = str2lst(preferences)
+        user_data["preferences"] = preferences
+    except Exception as e:
+        pass
 
     growth_plan = output["growth_plan"]
     print("Growth plan:")
@@ -267,13 +270,10 @@ def lambda_handler(event, context):
 
     try : 
         growth_plan = str2lst(growth_plan)
+        user_data["growth_plan"] = growth_plan
     except Exception as e:
         pass
 
     challenges = transform_challenge.run(challenge_str)
-
-    user_data = event["user_data"]
-    user_data["preferences"] = preferences
-    user_data["growth_plan"] = growth_plan
 
     return challenges, user_data

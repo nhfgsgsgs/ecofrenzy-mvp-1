@@ -55,8 +55,8 @@ Resources:
       CodeUri: src/
       Handler: challenge_generation.lambda_handler
       Runtime: python3.10
-      MemorySize: 128
-      Timeout: 300
+      MemorySize: 512
+      Timeout: 900
       Role: !GetAtt ChallengeGenerationFunctionRole.Arn
       Environment:
         Variables:
