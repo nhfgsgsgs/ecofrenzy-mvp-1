@@ -122,36 +122,20 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
         children: [
           Container(
             // white container with shadow
-            margin: const EdgeInsets.only(left: 20, right: 20, top: 20),
-            padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
+            padding: const EdgeInsets.only(left: 15, right: 15, top: 12.5),
+            decoration: const BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(20),
-              boxShadow: const [
-                BoxShadow(
-                  color: Colors.black12,
-                  offset: Offset(0, 10),
-                  blurRadius: 10,
-                )
-              ],
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  'Your Challenges',
-                  style: TextStyle(
-                    fontFamily: 'Ridley Grotesk',
-                    color: Colors.black,
-                    fontSize: 26,
-                  ),
-                ),
                 FutureBuilder<List<Challenge>>(
                   future: futureChallenges,
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Center(child: CircularProgressIndicator());
                     } else if (snapshot.hasError) {
+                      print(snapshot.error);
                       return const Text('Error loading challenges');
                     } else {
                       return ListView.builder(
@@ -279,13 +263,6 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
           )
         ],
       ),
-      actions: const [
-        Icon(
-          Icons.more_vert,
-          color: Colors.black,
-          size: 40,
-        )
-      ],
     );
   }
 
@@ -298,31 +275,26 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
           "#000000",
           "#000001",
         ],
-        "icon": "assets/images/.png",
+        "icon": "assets/images/consumption.png",
       },
       {
         "category": "Transportation",
         "color": [
           "#7717F3",
           "#660ED9",
+          "#BE61F8",
         ],
         "icon": "assets/images/transportation.png",
       },
       {
         "category": "Consumption",
-        "color": [
-          "#FDAD2D",
-          "#FE875C",
-        ],
+        "color": ["#FDAD2D", "#FE875C", "#FE4F7A"],
         "icon": "assets/images/consumption.png",
       },
       {
         "category": "Waste management",
-        "color": [
-          "#D92849",
-          "#D43653",
-        ],
-        "icon": "assets/images/waste management.png",
+        "color": ["#D92849", "#D43653", "#FFC71F"],
+        "icon": "assets/images/waste_management.png",
       },
       {
         "category": "Forestry",
@@ -330,7 +302,7 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
           "#000000",
           "#000001",
         ],
-        "icon": "assets/images/.png",
+        "icon": "assets/images/consumption.png",
       },
       {
         "category": "Awareness and Innovation",
@@ -338,7 +310,7 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
           "#000000",
           "#000001",
         ],
-        "icon": "assets/images/.png",
+        "icon": "assets/images/consumption.png",
       }
     ];
 
@@ -358,16 +330,59 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
       return [const Color(0xFFFF0000)]; // default color
     }
 
+    String getIcon(String category) {
+      for (var i = 0; i < listProps.length; i++) {
+        if (listProps[i]["category"] == category) {
+          return listProps[i]["icon"] as String;
+        }
+      }
+      return "assets/images/consumption.png"; // default icon
+    }
+
     return Container(
-      padding: const EdgeInsets.all(15),
-      margin: const EdgeInsets.only(top: 20),
+      height: 143,
+      width: 362,
+      padding: const EdgeInsets.only(left: 10, top: 15, right: 5, bottom: 5),
+      margin: const EdgeInsets.only(top: 32),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: getGradientColor(challenge.category),
+          colors: getGradientColor(challenge.category).sublist(0, 2),
           begin: Alignment.centerLeft,
           end: Alignment.centerRight,
         ),
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(15),
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0x19000000),
+            blurRadius: 0,
+            offset: Offset(0, 0),
+          ),
+          BoxShadow(
+            color: Color(0x19000000),
+            blurRadius: 4,
+            offset: Offset(0, 2),
+          ),
+          BoxShadow(
+            color: Color(0x16000000),
+            blurRadius: 8,
+            offset: Offset(0, 8),
+          ),
+          BoxShadow(
+            color: Color(0x0c000000),
+            blurRadius: 11,
+            offset: Offset(0, 18),
+          ),
+          BoxShadow(
+            color: Color(0x02000000),
+            blurRadius: 13,
+            offset: Offset(0, 33),
+          ),
+          BoxShadow(
+            color: Color(0x00000000),
+            blurRadius: 14,
+            offset: Offset(0, 51),
+          ),
+        ],
       ),
       child: ListTile(
         // tileColor: getColor(challenge.category), // set background color here
@@ -397,7 +412,29 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
                   challenge.status,
                   style: const TextStyle(color: Colors.white),
                 ),
+              )
+            ],
+          ),
+          Container(
+            decoration: BoxDecoration(
+              color: getGradientColor(challenge.category).last,
+              borderRadius: const BorderRadius.only(
+                bottomLeft: Radius.circular(15),
+                bottomRight: Radius.circular(15),
               ),
+            ),
+            child: const Text(
+              "View More >>>",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 12,
+                color: Colors.white,
+                fontFamily: "Ridley Grotesk",
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          )
+        ],
       ),
     );
   }
