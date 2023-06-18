@@ -2,7 +2,6 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:my_app/app/app.locator.dart';
 import 'package:my_app/app/app.router.dart';
-import 'package:my_app/screens/home/home_view.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
