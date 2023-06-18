@@ -1,3 +1,53 @@
-{
-    "id": "647f4871cba2f4670727a9a6"
-}
+[
+  {
+    "_id": "5f9d88b3c3e6c3b3e4e3e4e3",
+    "name": "Use Natural Light",
+    "category": "Energy and Resources",
+    "description": "Turn off your lights and open your curtains to let in natural light. Share a picture of your naturally lit room.",
+    "impact": "Reduce energy consumption by utilizing natural light during the day.",
+    "level": "Easy",
+    "creativity": "Direct",
+    "status": "Start",
+    "isDone": false,
+    "verification": [
+      {
+        "question": "Does this picture show a room lit by natural light?",
+        "desiredAnswer": "Yes"
+      }
+    ]
+  },
+  {
+    "_id": "5f9d88b3c3e6c3b3e4e3e4e4",
+    "name": "Morning Cold Shower",
+    "category": "Energy and Resources",
+    "description": "Take a shower using cold water. Share a picture of your shower settings or your cold face post-shower.",
+    "impact": "Taking a shower in cold water in the morning saves energy used for heating water while boosting your mental wellness for the day.",
+    "level": "Easy",
+    "creativity": "Indirect",
+    "status": "Start",
+    "isDone": false,
+    "verification": [
+      {
+        "question": "Does this picture show a shower set to cold water or does the person’s face show coldness after a shower?",
+        "desiredAnswer": "Yes"
+      }
+    ]
+  },
+  {
+    "_id": "5f9d88b3c3e6c3b3e4e3e4e5",
+    "name": "Upcycle an Old Item",
+    "category": "Waste Management",
+    "impact": "Reduce waste, promote creativity",
+    "description": "Transform an old item that you no longer use into something useful or decorative. Upcycling encourages repurposing and gives new life to old belongings.",
+    "level": "Hard",
+    "creativity": "Direct",
+    "status": "Start",
+    "isDone": false,
+    "verification": [
+      {
+        "question": "Is there any hand-made item?",
+        "desiredAnswer": "yes"
+      }
+    ]
+  }
+]
