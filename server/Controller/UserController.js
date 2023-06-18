@@ -16,7 +16,7 @@ const UserController = {
       console.log(user);
       if (user) {
         const missions = user?.todayMission?.filter((mission) => {
-          return mission.isDone == false && mission.status != "Start";
+          return mission.status != "Start";
         });
 
         if (missions.length == 1 && missions[0]._id == missionId) {
@@ -112,8 +112,8 @@ const UserController = {
               url: "",
               nextMission: [],
               age: 21,
-              gender: 'Male',
-              location: 'Urban'
+              gender: "Male",
+              location: "Urban",
             },
           },
         ]),

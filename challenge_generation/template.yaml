@@ -37,6 +37,16 @@ Resources:
                   - "ssm:PutParameter"
                 Resource:
                   - !Sub "arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/*"
+        
+        - PolicyName: InvokeLambda
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - "events:PutEvents"
+                  - "lambda:InvokeFunction"
+                Resource: "*"
 
   ChallengeGenerationFunction:
     Type: AWS::Serverless::Function
@@ -45,8 +55,8 @@ Resources:
       CodeUri: src/
       Handler: challenge_generation.lambda_handler
       Runtime: python3.10
-      MemorySize: 128
-      Timeout: 300
+      MemorySize: 512
+      Timeout: 900
       Role: !GetAtt ChallengeGenerationFunctionRole.Arn
       Environment:
         Variables:
