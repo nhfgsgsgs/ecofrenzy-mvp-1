@@ -95,6 +95,8 @@ flutter:
       fonts:
         - asset: assets/fonts/Ridley Grotesk Regular.otf
         - asset: assets/fonts/Ridley Grotesk ExtraBold.otf
+    - family: Ridley Grotesk SemiBold
+      fonts:
         - asset: assets/fonts/Ridley Grotesk SemiBold.otf
   #
   # For details regarding fonts from package dependencies,

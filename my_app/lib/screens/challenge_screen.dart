@@ -226,19 +226,19 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
         "category": "Transportation",
         "color": [
           "#7717F3",
-          "#660ED9",
+          "#8E37FF",
           "#BE61F8",
         ],
         "icon": "assets/images/transportation.png",
       },
       {
         "category": "Consumption",
-        "color": ["#FDAD2D", "#FE875C", "#FE4F7A"],
+        "color": ["#FDAD2D", "#FE875C", "#FFC71F"],
         "icon": "assets/images/consumption.png",
       },
       {
         "category": "Waste management",
-        "color": ["#D92849", "#D43653", "#FFC71F"],
+        "color": ["#D92849", "#D43653", "#FE4F7A"],
         "icon": "assets/images/waste_management.png",
       },
       {
@@ -284,134 +284,141 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
       return "assets/images/consumption.png"; // default icon
     }
 
-    return Container(
-      height: 143,
-      width: 362,
-      padding: const EdgeInsets.only(left: 10, top: 15, right: 5, bottom: 5),
-      margin: const EdgeInsets.only(top: 32),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: getGradientColor(challenge.category).sublist(0, 2),
-          begin: Alignment.centerLeft,
-          end: Alignment.centerRight,
-        ),
-        borderRadius: BorderRadius.circular(15),
-        boxShadow: const [
-          BoxShadow(
-            color: Color(0x19000000),
-            blurRadius: 0,
-            offset: Offset(0, 0),
-          ),
-          BoxShadow(
-            color: Color(0x19000000),
-            blurRadius: 4,
-            offset: Offset(0, 2),
-          ),
-          BoxShadow(
-            color: Color(0x16000000),
-            blurRadius: 8,
-            offset: Offset(0, 8),
-          ),
-          BoxShadow(
-            color: Color(0x0c000000),
-            blurRadius: 11,
-            offset: Offset(0, 18),
-          ),
-          BoxShadow(
-            color: Color(0x02000000),
-            blurRadius: 13,
-            offset: Offset(0, 33),
-          ),
-          BoxShadow(
-            color: Color(0x00000000),
-            blurRadius: 14,
-            offset: Offset(0, 51),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                margin: const EdgeInsets.fromLTRB(5, 0, 5, 20),
-                height: 60,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      width: 60,
-                      height: 60,
-                      margin: const EdgeInsets.only(right: 10),
-                      padding: const EdgeInsets.all(5),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(50),
-                        color: Colors.white,
-                      ),
-                      child: Center(
-                        child: SizedBox(
-                          width: 47,
-                          height: 47,
-                          child: Image.asset(
-                            getIcon(challenge.category),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            challenge.name,
-                            style: const TextStyle(
-                                fontSize: 20,
-                                color: Colors.white,
-                                fontFamily: "Ridley Grotesk",
-                                fontWeight: FontWeight.bold),
-                          ),
-                          Text(
-                            challenge.category,
-                            style: const TextStyle(
-                                fontSize: 13,
-                                color: Colors.white,
-                                fontFamily: "Ridley Grotesk"),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              )
+    return Stack(
+      children: [
+        Container(
+          height: 148,
+          width: 382,
+          padding: const EdgeInsets.only(left: 10, top: 15, right: 5, bottom: 5),
+          margin: const EdgeInsets.only(top: 35),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: getGradientColor(challenge.category).sublist(0, 2),
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+            ),
+            borderRadius: BorderRadius.circular(15),
+            boxShadow: const [
+              BoxShadow(
+                color: Color(0x19000000),
+                blurRadius: 0,
+                offset: Offset(0, 0),
+              ),
+              BoxShadow(
+                color: Color(0x19000000),
+                blurRadius: 4,
+                offset: Offset(0, 2),
+              ),
+              BoxShadow(
+                color: Color(0x16000000),
+                blurRadius: 8,
+                offset: Offset(0, 8),
+              ),
+              BoxShadow(
+                color: Color(0x0c000000),
+                blurRadius: 11,
+                offset: Offset(0, 18),
+              ),
+              BoxShadow(
+                color: Color(0x02000000),
+                blurRadius: 13,
+                offset: Offset(0, 33),
+              ),
+              BoxShadow(
+                color: Color(0x00000000),
+                blurRadius: 14,
+                offset: Offset(0, 51),
+              ),
             ],
           ),
-          Container(
-            decoration: BoxDecoration(
-              color: getGradientColor(challenge.category).last,
-              borderRadius: const BorderRadius.only(
-                bottomLeft: Radius.circular(15),
-                bottomRight: Radius.circular(15),
-              ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    margin: const EdgeInsets.fromLTRB(15, 10, 5, 20),
+                    height: 80,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          width: 62,
+                          height: 62,
+                          margin: const EdgeInsets.only(right: 10),
+                          padding: const EdgeInsets.all(5),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(50),
+                            color: Colors.white,
+                          ),
+                          child: Center(
+                            child: SizedBox(
+                              width: 49,
+                              height: 49,
+                              child: Image.asset(
+                                getIcon(challenge.category),
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                challenge.name,
+                                style: const TextStyle(
+                                    fontSize: 21,
+                                    color: Colors.white,
+                                    fontFamily: "Ridley Grotesk",
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              Text(
+                                challenge.category,
+                                style: const TextStyle(
+                                    fontSize: 13,
+                                    color: Colors.white,
+                                    fontFamily: "Ridley Grotesk"),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              ),             
+            ],
+          ),
+        ),
+        Container(
+          padding: const EdgeInsets.only(right: 20, top: 4, bottom: 5),
+          height: 30,
+          width: 382,
+          margin: const EdgeInsets.only(top: 154),
+          decoration: BoxDecoration(
+            color: getGradientColor(challenge.category).last,
+            borderRadius: const BorderRadius.only(
+              bottomLeft: Radius.circular(15),
+              bottomRight: Radius.circular(15),
             ),
-            child: const Text(
-              "View More >>>",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 12,
-                color: Colors.white,
-                fontFamily: "Ridley Grotesk",
-                fontWeight: FontWeight.bold,
-              ),
+          ),
+          child: const Text(
+            "View More >>>",
+            textAlign: TextAlign.right,
+            style: TextStyle(
+              fontSize: 14,
+              color: Colors.white,
+              fontFamily: "Ridley Grotesk SemiBold",
             ),
-          )
-        ],
-      ),
+          ),
+        )
+      ],
     );
   }
 }
