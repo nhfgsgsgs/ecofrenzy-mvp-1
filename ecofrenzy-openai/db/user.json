@@ -1,0 +1,19 @@
+[
+    {
+        "_id": "test-person-1",
+        "age": 21,
+        "gender": "male",
+        "location": "urban",
+        "usageDay": 6,
+        "preferences": [
+            "The user tends to choose challenges categorized as easy or intermediate difficulty rather than hard challenges.",
+            "The user seems to prefer challenges that have a direct impact on the environment.",
+            "The user is interested in challenges related to consumption and waste management, as well as energy and resource conservation."
+        ],
+        "growth_plan": [
+            "Continue to provide challenges that promote waste reduction and proper waste sorting, such as composting, reducing single-use plastics, and recycling correctly.",
+            "Encourage sustainable consumption habits by introducing challenges related to responsible shopping, supporting local and sustainable brands, and reducing overall consumption.",
+            "Introduce challenges that encourage stepping out of the comfort zone, such as exploring sustainable fashion choices, adopting a plant-based diet, and embracing green technologies."
+        ]
+    }
+]

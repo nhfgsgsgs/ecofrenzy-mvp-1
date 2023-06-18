@@ -1,0 +1,172 @@
+[
+  {
+    "_id": "5f9d88b3c3e6c3b3e4e3e4e3",
+    "name": "Use Natural Light",
+    "category": "Energy and Resources",
+    "description": "Turn off your lights and open your curtains to let in natural light. Share a picture of your naturally lit room.",
+    "impact": "Reduce energy consumption by utilizing natural light during the day.",
+    "level": "Easy",
+    "creativity": "Direct",
+    "verification": [
+      {
+        "question": "Does this picture show a room lit by natural light?",
+        "desiredAnswer": "Yes"
+      },
+      {
+        "question": "Is there a light in the photo?",
+        "desiredAnswer": "Yes"
+      }
+    ]
+  },
+  {
+    "_id": "5f9d88b3c3e6c3b3e4e3e4e4",
+    "name": "Public Transportation Usage",
+    "category": "Transportation",
+    "impact": "Encourages users to utilize public transit, reducing the number of single-occupancy vehicles on the road and lowering carbon emissions.",
+    "description": "Use public transportation for your commute. Share a picture of you using public transit.",
+    "level": "Easy",
+    "creativity": "Direct",
+    "verification": [
+      {
+        "question": "Does this?",
+        "desiredAnswer": "yes"
+      },
+      {
+        "question": "Does this photo relate to person in a pubic transport?",
+        "desiredAnswer": "no" 
+      }
+    ]
+  },
+  {
+    "_id": "5f9d88b3c3e6c3b3e4e3e4e5",
+    "name": "Morning Cold Shower",
+    "category": "Energy and Resources",
+    "description": "Take a shower using cold water. Share a picture of your shower settings or your cold face post-shower.",
+    "impact": "Taking a shower in cold water in the morning saves energy used for heating water while boosting your mental wellness for the day.",
+    "level": "Easy",
+    "creativity": "Indirect",
+    "verification": [
+      {
+        "question": "Does this photo showing person in the bathroom?",
+        "desiredAnswer": "Yes"
+      }
+    ]
+  },
+  {
+    "_id": "5f9d88b3c3e6c3b3e4e3e4e6",
+    "name": "Upcycle an Old Item",
+    "category": "Waste management",
+    "impact": "Reduce waste, promote creativity",
+    "description": "Transform an old item that you no longer use into something useful or decorative. Upcycling encourages repurposing and gives new life to old belongings.",
+    "level": "Hard",
+    "creativity": "Direct",
+    "verification": [
+      {
+        "question": "Is there any evidence of the person using recycled or salvaged materials in the upcycled item?,",
+        "desiredAnswer": "yes"
+      },
+      {
+        "question": "Is there any hand-made item?",
+        "desiredAnswer": "yes"
+      }
+    ]
+  },
+  {
+    "_id": "5f9d88b3c3e6c3b3e4e3e4e7",
+    "name": "Bike to Work",
+    "category": "Transportation",
+    "impact": "Reduce carbon emissions, improve physical fitness",
+    "description": "Pledge to commute to work using a bicycle instead of a car or public transportation for a week. Track your progress and encourage others to join.",
+    "level": "Intermediate",
+    "creativity": "Direct",
+    "verification": [
+      {
+        "question": "Is there a bicycle in the photo?",
+        "desiredAnswer": "yes"
+      },
+      {
+        "question": "Is there a bicycle in the photo and a cycling-related activity?",
+        "desiredAnswer": "yes"
+      }
+    ]
+  },
+  {
+    "_id": "5f9d88b3c3e6c3b3e4e3e4e8",
+    "name": "Bring Your Own Bag",
+    "category": "Consumption",
+    "impact": "Reduce plastic waste, promote eco-friendly habits",
+    "description": "Commit to bringing your own reusable bags when shopping instead of using single-use plastic bags. Make a conscious effort to avoid unnecessary plastic waste.",
+    "level": "Easy",
+    "creativity": "Direct",
+    "verification": [
+      {
+        "question": "Is there a bag or anything considered as a bag that a flexible container used for carrying and storing various items?",
+        "desiredAnswer": "yes"
+      },
+      {
+        "question": "Is there any bag made from non-environmentally friendly materials like plastic bags?",
+        "desiredAnswer": "no" 
+      }
+    ]
+  },
+  {
+    "_id": "5f9d88b3c3e6c3b3e4e3e4e9",
+    "name": "Cook with Organic Ingredients",
+    "category": "Consumption",
+    "impact": "Boosts the application of organic technology in farming and livestock, which helps limit the release of harmful agricultural chemicals into the environment.",
+    "description": "Cook a meal using organic ingredients. Share a picture of your meal made from organic ingredients.",
+    "level": "Intermediate",
+    "creativity": "Direct",
+    "verification": [
+      {
+        "question": "Does this picture show the user with a meal made from organic ingredients?",
+        "desiredAnswer": "yes"
+      }
+    ]
+  },
+  {
+    "_id": "5f9d88b3c3e6c3b3e4e3e5e0",
+    "name": "Finish All Cooked Food",
+    "category": "Waste management",
+    "impact": "Develop a habit of calculating scientifically when shopping and limit organic waste.",
+    "description": "Finish all the food you cooked at home. Share a picture of your empty plate after a meal.",
+    "level": "Easy",
+    "creativity": "Direct",
+    "verification": [
+      {
+        "question": "Does this picture show the user with an empty plate after a meal?",
+        "desiredAnswer": "yes"
+      }
+    ]
+  },
+  {
+    "_id": "5f9d88b3c3e6c3b3e4e3e5e1",
+    "name": "Build a Home Trash Sorting System",
+    "category": "Waste management",
+    "impact": "Gradually develop the habit of recycling and reduce waste disposal costs.",
+    "description": "Build a sorting system for trash at home. Share a picture of your home trash sorting system.",
+    "level": "Hard",
+    "creativity": "Direct",
+    "verification": [   
+      {
+        "question": "Does this picture show the user with a home trash sorting system?",
+        "desiredAnswer": "yes"
+      }
+    ]
+  },
+  {
+    "_id": "5f9d88b3c3e6c3b3e4e3e5e2",
+    "name": "Participate in a Tree Identification Walk",
+    "category": "Forestry",
+    "impact": "Learning to identify trees can increase appreciation for local forests and the importance of conservation.",
+    "description": "Join a tree identification walk in your community or use a guidebook or app to identify trees in your area. Share a picture of a tree you identified and its name.",
+    "level": "Easy",
+    "creativity": "Direct",
+    "verification": [
+      {
+        "question": "Does this picture show a tree that the participant has identified?",
+        "desiredAnswer": "yes"
+      }
+    ]
+  }
+]
